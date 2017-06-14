@@ -16,7 +16,7 @@ public class DatabaseRecipeIngredient extends SQLiteOpenHelper{
     public static final String NAME = "RecipeIngredientRelationship";
     public static final String COL1 = "ingredientId";
     public static final String COL2 = "recipeId";
-    public static final String COL3 = "ammount";
+    public static final String COL3 = "amount";
 
     public DatabaseRecipeIngredient(Context context){
         super(context, context.getString(R.string.database_name),null,VERSION);
@@ -34,5 +34,6 @@ public class DatabaseRecipeIngredient extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DELETE TABLE IF EXISTS " + NAME);
+        onCreate(db);
     }
 }

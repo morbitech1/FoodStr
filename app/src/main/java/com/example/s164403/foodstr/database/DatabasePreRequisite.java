@@ -25,7 +25,7 @@ public class DatabasePreRequisite extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         db.execSQL( "CREATE TABLE " + NAME + " (" +
                 COL1 + " INTEGER FOREIGN KEY,"+
-                COL2 + " INTEGER FOREING KEY)"
+                COL2 + " INTEGER FOREIGN KEY)"
         );
     }
 

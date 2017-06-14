@@ -16,6 +16,8 @@ public class DatabaseIngredient extends SQLiteOpenHelper{
     public static final String COL1 = "id";
     public static final String COL2 = "name";
     public static final String COL3 = "alias";
+    // Maps to enum
+    public static final String COL4 = "primaryUnit";
 
     public DatabaseIngredient(Context context){
         super(context, context.getString(R.string.database_name), null, VERSION);
@@ -26,7 +28,8 @@ public class DatabaseIngredient extends SQLiteOpenHelper{
         db.execSQL( "CREATE TABLE " + NAME + " (" +
                 COL1 + "INTEGER PRIMARY KEY,"+
                 COL2 + " TEXT,"+
-                COL3 + " TEXT)"
+                COL3 + " INTEGER,"+
+                COL4 + " TEXT)"
         );
     }
 

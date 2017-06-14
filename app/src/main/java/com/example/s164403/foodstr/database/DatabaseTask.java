@@ -15,7 +15,7 @@ public class DatabaseTask extends SQLiteOpenHelper {
     public static final int VERSION = 1;
     public static final String NAME = "task";
     public static final String COL1 = "recipe";
-    public static final String COL2 = "time";
+    public static final String COL2 = "duration";
     public static final String COL3 = "hot";
     public static final String COL4 = "hands";
 
