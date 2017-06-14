@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class Timeline {
     //Recipe recipe;
     private ArrayList<RecipeStep> steps = new ArrayList<RecipeStep>();
-    private HashMap<Integer, String> alarms;
+    private HashMap<Integer, StepAlarm> alarms;
 
     private int finishtime;
 
@@ -47,11 +47,25 @@ public class Timeline {
         return 3;
     }
 
+    private void planStep(RecipeStep step, int start, int line){
+        step.setStartTime(start);
+        step.setLine(line);
+
+        if (alarms.get(start) == null){alarms.put(start, new StepAlarm(start));}
+        alarms.get(start).addEndingStep(step);
+
+        int end = start + step.getTime();
+        if (alarms.get(end) == null){alarms.put(end, new StepAlarm(end));}
+        alarms.get(end).addStartingStep(step);
+
+        if (end > finishtime) finishtime = end;
+    }
+
     public void sort(){
         //Reset our alarms - we will calculate them here
+        alarms = new HashMap<Integer, StepAlarm>();
 
         //Sort the important steps (the warm steps that require hands)
-
         ArrayList<RecipeStep> prioritysteps = new ArrayList<RecipeStep>();
         ArrayList<RecipeStep> normalsteps = new ArrayList<RecipeStep>();
 
@@ -81,8 +95,7 @@ public class Timeline {
                     }
                 }
 
-                step.setStartTime(mintime);
-                step.setLine(minline);
+                planStep(step, mintime, minline);
 
                 nexthand[minline] = nexthand[minline] + step.getTime();
             }
@@ -106,20 +119,18 @@ public class Timeline {
                         }
                     }
 
-                    step.setStartTime(mintime);
-                    step.setLine(minline);
+                    planStep(step, mintime, minline);
 
                     nexthand[minline] = nexthand[minline] + step.getTime();
                 }else{
-                    step.setStartTime(0);
-                    step.setLine(coldline);
+                    planStep(step, 0, coldline);
                     coldline++;
                 }
             }
         }
     }
 
-    public HashMap<Integer, String> getAlarmTimes(){
+    public HashMap<Integer, StepAlarm> getAlarmTimes(){
         return alarms;
     }
 
@@ -178,7 +189,9 @@ public class Timeline {
         System.out.println(r6.toString());
         System.out.println(r7.toString());
 
-
+        for (StepAlarm a : tester.getAlarmTimes().values()){
+            System.out.println(a.toString());
+        }
     }
 
 }
