@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 public class LocalDatabaseFridge extends SQLiteOpenHelper{
     private final Context context;
-    private static final int VERSION = 2;
+    private static final int VERSION = 4;
     private static final String NAME = "fridge";
     private static final String COL1 = "ingredientId";
     private static final String COL2 = "amount";
@@ -55,11 +55,11 @@ public class LocalDatabaseFridge extends SQLiteOpenHelper{
         return res;
     }
 
-    public int remove(int id){
+    public long remove(long id){
         return getWritableDatabase().delete(NAME, COL1 + "="+id, null);
     }
 
-    public long addIngredient(int id, double amount){
+    public long addIngredient(long id, double amount){
         ContentValues cv = new ContentValues();
         cv.put(COL1, id);
         cv.put(COL2, amount);

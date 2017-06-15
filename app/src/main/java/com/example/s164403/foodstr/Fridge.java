@@ -16,9 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.s164403.foodstr.database.DatabaseIngredient;
+import com.example.s164403.foodstr.database.DatabaseRecipeIngredient;
 import com.example.s164403.foodstr.database.DummyData;
 import com.example.s164403.foodstr.database.LocalDatabaseFridge;
 import com.example.s164403.foodstr.database.Model.Ingredient;
+import com.example.s164403.foodstr.database.Model.RecipeIngredientRelation;
 
 import java.util.HashMap;
 
@@ -33,9 +35,12 @@ public class Fridge extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fridge);
         initializeUiElements();
-        final DatabaseIngredient databaseIngredient = new DatabaseIngredient(this);
-        databaseIngredient.addIngredients(DummyData.dummyIngredients());
+        DatabaseRecipeIngredient recipeIngredientDb = new DatabaseRecipeIngredient(this);
+        for(RecipeIngredientRelation ri : DummyData.dummyRI()){
+            recipeIngredientDb.addRelation(ri);
+        }
 
+        final DatabaseIngredient databaseIngredient = new DatabaseIngredient(this);
         final ArrayAdapter<Ingredient> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, databaseIngredient.getAllIngredients());
         Log.d("Ingredient list", databaseIngredient.getAllIngredients().toString());

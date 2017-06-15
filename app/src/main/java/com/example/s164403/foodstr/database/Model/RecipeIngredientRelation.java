@@ -1,19 +1,19 @@
 package com.example.s164403.foodstr.database.Model;
 
+import java.util.HashMap;
+
 /**
  * Created by aMoe on 14-06-2017.
  */
 
 public class RecipeIngredientRelation {
     public Recipe recipe;
-    public Ingredient ingredient;
+    public HashMap<Ingredient, Double> ingredients;
 
-    // Number of primaryUnits in ingredient per person
-    public int factor;
 
-    public RecipeIngredientRelation(Recipe recipe, Ingredient ingredient, int factor) {
+    public RecipeIngredientRelation(Recipe recipe, HashMap<Ingredient, Double> ingredients) {
         this.recipe = recipe;
-        this.ingredient = ingredient;
-        this.factor = factor;
+        this.ingredients = ingredients;
+
     }
 }
