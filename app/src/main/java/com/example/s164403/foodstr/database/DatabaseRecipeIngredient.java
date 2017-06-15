@@ -1,12 +1,9 @@
 package com.example.s164403.foodstr.database;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.s164403.foodstr.R;
 import com.example.s164403.foodstr.database.Model.Ingredient;
 import com.example.s164403.foodstr.database.Model.RecipeIngredientRelation;
 
@@ -45,7 +42,7 @@ public class DatabaseRecipeIngredient implements DatabaseTableDefinition{
 
         for(Ingredient ingredient : rir.ingredients.keySet()){
             dbIngredient.addIngredient(db, ingredient);
-            if(hasEntry(db, rir.recipe.id, ingredient.id)) {
+            if(!hasEntry(db, rir.recipe.id, ingredient.id)) {
                 ContentValues cv = new ContentValues();
                 cv.put(COL1, rir.recipe.id);
                 cv.put(COL2, ingredient.id);
