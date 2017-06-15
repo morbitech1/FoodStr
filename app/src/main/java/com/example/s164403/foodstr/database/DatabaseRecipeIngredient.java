@@ -45,7 +45,7 @@ public class DatabaseRecipeIngredient implements DatabaseTableDefinition{
 
         for(Ingredient ingredient : rir.ingredients.keySet()){
             dbIngredient.addIngredient(db, ingredient);
-            if(hasEntry(db, rir.recipe.id, ingredient.id)) {
+            if(!hasEntry(db, rir.recipe.id, ingredient.id)) {
                 ContentValues cv = new ContentValues();
                 cv.put(COL1, rir.recipe.id);
                 cv.put(COL2, ingredient.id);

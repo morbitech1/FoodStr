@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 import com.example.s164403.foodstr.database.DatabaseRecipeIngredient;
 
-public class Fridge extends AppCompatActivity {
+public class Fridge extends AppCompatActivity{
 
     Button add;
     AutoCompleteTextView ingredient;
