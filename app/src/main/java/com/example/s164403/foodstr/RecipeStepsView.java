@@ -1,0 +1,65 @@
+package com.example.s164403.foodstr;
+
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.*;
+import android.text.TextPaint;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+
+import static android.view.MotionEvent.ACTION_BUTTON_PRESS;
+
+
+/**
+ * TODO: document your custom view class.
+ */
+public class RecipeStepsView extends View {
+
+    private Paint PaintBrush = new Paint();
+    private TextPaint mTextPaint;
+    private float mTextWidth;
+    private float mTextHeight;
+
+    public RecipeStepsView(Context context) {
+        super(context);
+        init(null, 0);
+    }
+
+    public RecipeStepsView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(attrs, 0);
+    }
+
+    public RecipeStepsView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init(attrs, defStyle);
+    }
+
+    private void init(AttributeSet attrs, int defStyle) {
+        PaintBrush.setColor(Color.BLACK);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas){
+        super.onDraw(canvas);
+        String name = "hej";
+        canvas.drawLine(0,getHeight()-1,getWidth(),getHeight()-1,PaintBrush);
+        PaintBrush.setTextSize(getHeight()/4);
+        canvas.drawText(name,0,getHeight()/2,PaintBrush);
+        boolean isHand = true;
+        if(isHand) {
+            Drawable mhandsymbol = getResources().getDrawable(R.drawable.handsymbol);
+            mhandsymbol.setBounds(getWidth() / 2, 0, getWidth() / 10 * 7, getHeight());
+            mhandsymbol.draw(canvas);
+        }
+        String time = "0-12";
+        canvas.drawText(time,getWidth()/10*7,getHeight()/2,PaintBrush);
+
+    }
+
+}

@@ -1,0 +1,44 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app2="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="280dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginRight="10dp">
+
+            <ImageButton
+                android:id="@+id/imageButton10"
+                android:layout_width="76dp"
+                android:layout_height="match_parent"
+                android:maxHeight="45dp"
+                android:maxWidth="45dp"
+                android:scaleType="fitCenter"
+                app2:srcCompat="@drawable/handsymbol" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.example.s164403.foodstr.RecipeStepsView
+        android:id="@+id/recipeStepsView"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginLeft="10dp"
+
+        android:layout_marginRight="30dp" />
+
+
+</FrameLayout>
