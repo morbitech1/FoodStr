@@ -1,15 +1,18 @@
 package com.example.s164403.foodstr.database;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
-import com.example.s164403.foodstr.R;
+import com.example.s164403.foodstr.Fridge;
 import com.example.s164403.foodstr.database.Model.Ingredient;
+import com.example.s164403.foodstr.database.Model.Recipe;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Morbi95 on 14-Jun-17.
@@ -79,6 +82,34 @@ public class LocalDatabaseFridge implements DatabaseTableDefinition{
         double res = -1;
         if(cursor.moveToFirst())
             res = cursor.getDouble(cursor.getColumnIndex(COL2));
+        return res;
+    }
+
+    public Map<Recipe, Double> searchRecipesByScore(SQLiteDatabase db, int numOfPeople, int limit) {
+        Map<Recipe, Double> res = new LinkedHashMap();
+        String query = " SELECT * FROM " +
+                "(" +
+                " SELECT "+ DatabaseRecipeIngredient.COL1 +", AVG(Score) as RepScore FROM" +
+                "(" +
+                " SELECT " + DatabaseRecipeIngredient.COL1 + ", case when Score > 100 then 100 else Score end as Score FROM (" +
+                " SELECT "+ DatabaseRecipeIngredient.NAME +"."+ DatabaseRecipeIngredient.COL1 +"," +
+                DatabaseRecipeIngredient.NAME +"."+ DatabaseRecipeIngredient.COL2 +"," +
+                " ifnull(100*("+ LocalDatabaseFridge.NAME + "." + LocalDatabaseFridge.COL2 +")/(" + DatabaseRecipeIngredient.NAME +"."+ DatabaseRecipeIngredient.COL3 + "*" + numOfPeople + "), 0) as Score" +
+                " FROM " + DatabaseRecipeIngredient.NAME +
+                " LEFT OUTER JOIN "+ LocalDatabaseFridge.NAME +" on " + LocalDatabaseFridge.NAME + "." + LocalDatabaseFridge.COL1 + " = " + DatabaseRecipeIngredient.NAME + "." + DatabaseRecipeIngredient.COL2 +
+                ")" +
+                ")" +
+                "GROUP by " + DatabaseRecipeIngredient.COL1 + " ORDER BY RepScore DESC LIMIT " + limit +
+                ") JOIN " + DatabaseRecipe.NAME + " on "+ DatabaseRecipe.NAME +"."+ DatabaseRecipe.COL1 +" = " + DatabaseRecipeIngredient.COL1;
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            Log.i(Fridge.TAG, Arrays.deepToString(cursor.getColumnNames()));
+            do {
+                Recipe recipe = new Recipe(cursor);
+                res.put(recipe, cursor.getDouble(cursor.getColumnIndex("RepScore")));
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
         return res;
     }
 }
