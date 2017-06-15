@@ -1,5 +1,6 @@
 package com.example.s164403.foodstr;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,9 @@ public class MainActivity extends AppCompatActivity{
     FrameLayout mainView;
     LinearLayout menuBar;
     Button search;
+    final Fridge fridgeFragment = new Fridge();
+    final SearchResult searchResultFragment = new SearchResult();
+    Fragment currentFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,18 +28,24 @@ public class MainActivity extends AppCompatActivity{
         mainView = (FrameLayout) findViewById(R.id.main_view);
         menuBar = (LinearLayout) findViewById(R.id.menu_bar);
         search = (Button) findViewById(R.id.search);
-        final Fridge fridgeFragment = new Fridge();
-        getFragmentManager().beginTransaction().add(R.id.main_view, fridgeFragment).commit();
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SearchResult searchResult = new SearchResult();
-                getFragmentManager().beginTransaction()
-                        .remove(fridgeFragment)
-                        .add(R.id.main_view, searchResult)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
+        if(savedInstanceState == null) {
+            getFragmentManager().beginTransaction().replace(R.id.main_view, fridgeFragment).commit();
+            currentFragment = fridgeFragment;
+            search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.main_view, searchResultFragment)
+                            .addToBackStack(null)
+                            .commit();
+                    currentFragment = searchResultFragment;
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 }
