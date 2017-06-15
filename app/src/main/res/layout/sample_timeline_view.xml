@@ -1,0 +1,22 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.example.s164403.foodstr"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.example.s164403.foodstr.TimelineView
+        android:layout_width="wrap_content"
+        android:layout_height="105dp"
+        android:background="#ffffff"
+        android:paddingBottom="40dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        app:exampleColor="#33b5e5"
+        app:hotColor="#f4d142"
+        app:coldColor="#53b7fa"
+        app:exampleDimension="24sp"
+        app:stepSpacing="6dp"
+        app:exampleDrawable="@android:drawable/ic_menu_add"
+        app:exampleString="Hello, TimelineView"/>
+
+</FrameLayout>
