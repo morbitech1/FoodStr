@@ -1,5 +1,6 @@
 package com.example.s164403.foodstr;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -60,6 +61,9 @@ public class Fridge extends AppCompatActivity {
                         a = -1;
                     }
                     fridgeDB.addIngredient(i.id, a);
+                    fridge.addView(generateFridgeFragment(i, a, fridgeDB));
+                    ingredient.setText("");
+                    amount.setText("");
                 }else{
                     Toast.makeText(getApplicationContext(), ingredient.getText().toString() + " does not exists", Toast.LENGTH_LONG).show();
                 }
@@ -74,16 +78,18 @@ public class Fridge extends AppCompatActivity {
         fridge.removeAllViews();
         for(final Ingredient ingredient : ingredients.keySet()){
             fridge.addView(generateFridgeFragment(ingredient, ingredients.get(ingredient), fridgeDB));
+            Log.d("Fridge", ""+fridge.getChildCount());
         }
     }
 
-    private LinearLayout generateFridgeFragment(final Ingredient ingredient, int ammount, final LocalDatabaseFridge fridgeDB){
+    private LinearLayout generateFridgeFragment(final Ingredient ingredient, double amount, final LocalDatabaseFridge fridgeDB){
         final LinearLayout fragment = (LinearLayout) getLayoutInflater().inflate(R.layout.fridge_fragment, null);
         TextView fridgeIngredient = (TextView) fragment.findViewById(R.id.fridge_ingredient);
         EditText fridgeAmount = (EditText) fragment.findViewById(R.id.fridge_amount);
         ImageButton fridgeButton = (ImageButton) fragment.findViewById(R.id.fridge_remove);
         fridgeIngredient.setText(ingredient.name);
-        fridgeAmount.setText(ammount);
+        Log.d("Test", ""+amount);
+        fridgeAmount.setText(amount >= 0 ? ""+amount : "");
         fridgeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,6 +104,6 @@ public class Fridge extends AppCompatActivity {
         add = (Button) findViewById(R.id.add);
         ingredient = (AutoCompleteTextView) findViewById(R.id.ingredient);
         amount = (EditText) findViewById(R.id.amount);
-        fridge = (LinearLayout) getLayoutInflater().inflate(R.layout.fridge, null);
+        fridge = (LinearLayout) findViewById(R.id.fridgeBox);
     }
 }

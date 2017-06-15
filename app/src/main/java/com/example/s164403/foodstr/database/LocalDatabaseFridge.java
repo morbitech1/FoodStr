@@ -56,7 +56,7 @@ public class LocalDatabaseFridge extends SQLiteOpenHelper{
     }
 
     public int remove(int id){
-        return getWritableDatabase().delete(NAME, "WHERE " + COL1 + "="+id, null);
+        return getWritableDatabase().delete(NAME, COL1 + "="+id, null);
     }
 
     public long addIngredient(int id, double amount){
