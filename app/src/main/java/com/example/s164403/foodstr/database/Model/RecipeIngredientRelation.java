@@ -7,8 +7,8 @@ import java.util.HashMap;
  */
 
 public class RecipeIngredientRelation {
-    public Recipe recipe;
-    public HashMap<Ingredient, Double> ingredients;
+    final public Recipe recipe;
+    final public HashMap<Ingredient, Double> ingredients;
 
     // Number of primaryUnits in ingredient per person
     public int factor;

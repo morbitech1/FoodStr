@@ -11,11 +11,15 @@ import com.example.s164403.foodstr.database.Model.RecipeIngredientRelation;
  * Created by s164403 on 6/14/2017.
  */
 
-public class DatabaseRecipeIngredient implements DatabaseTableDefinition{
+public class DatabaseRecipeIngredient extends DatabaseTableDefinition{
     public static final String NAME = "RecipeIngredientRelationship";
     public static final String COL1 = "recipe_id";
     public static final String COL2 = "ingredient_id";
     public static final String COL3 = "factor";
+
+    public DatabaseRecipeIngredient(SQLiteDatabase db){
+        super(db);
+    }
 
     @Override
     public String getCreateQuery() {
@@ -32,17 +36,17 @@ public class DatabaseRecipeIngredient implements DatabaseTableDefinition{
     }
 
 
-    public void addRelation(SQLiteDatabase db, RecipeIngredientRelation rir){
-        DatabaseRecipe dbRecipe = new DatabaseRecipe();
-        DatabaseIngredient dbIngredient = new DatabaseIngredient();
+    public void addRelation(RecipeIngredientRelation rir){
+        DatabaseRecipe dbRecipe = new DatabaseRecipe(db);
+        DatabaseIngredient dbIngredient = new DatabaseIngredient(db);
         long recipeId = dbRecipe.getId(db, rir.recipe.name);
         if(recipeId < 0)
-            recipeId = dbRecipe.addRecipe(db, rir.recipe);
+            recipeId = dbRecipe.addRecipe(rir.recipe);
         rir.recipe.id = recipeId;
 
         for(Ingredient ingredient : rir.ingredients.keySet()){
-            dbIngredient.addIngredient(db, ingredient);
-            if(!hasEntry(db, rir.recipe.id, ingredient.id)) {
+            dbIngredient.addIngredient(ingredient);
+            if(!hasEntry(rir.recipe.id, ingredient.id)) {
                 ContentValues cv = new ContentValues();
                 cv.put(COL1, rir.recipe.id);
                 cv.put(COL2, ingredient.id);
@@ -52,7 +56,7 @@ public class DatabaseRecipeIngredient implements DatabaseTableDefinition{
         }
     }
 
-    public boolean hasEntry(SQLiteDatabase db, long recipeID, long ingredientID){
+    public boolean hasEntry(long recipeID, long ingredientID){
         Cursor cursor = db.rawQuery("SELECT * FROM "+ NAME + " WHERE " + COL1 + "="+recipeID + " AND " + COL2 + "="+ingredientID, null);
         boolean check = cursor.moveToFirst();
         cursor.close();

@@ -1,5 +1,7 @@
 package com.example.s164403.foodstr.database.Model;
 
+import android.database.Cursor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -27,6 +29,14 @@ public class Ingredient {
 
     public Ingredient(String name, PrimaryUnit primaryUnit){
         this(name, new String[0], primaryUnit);
+    }
+
+    public Ingredient(Cursor cursor){
+        this(cursor.getInt(0),
+            cursor.getString(1),
+            Ingredient.parseCsvAlias(cursor.getString(2)),
+            PrimaryUnit.valueOf(cursor.getString(3))
+        );
     }
 
     public String getAliasCsv(){
@@ -61,5 +71,10 @@ public class Ingredient {
 
     public List<RecipeIngredientRelation> getRecipeRelations() {
         throw new Error();
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 }

@@ -18,10 +18,14 @@ import java.util.Map;
  * Created by Morbi95 on 14-Jun-17.
  */
 
-public class LocalDatabaseFridge implements DatabaseTableDefinition{
+public class LocalDatabaseFridge extends DatabaseTableDefinition{
     private static final String NAME = "fridge";
     private static final String COL1 = "ingredientId";
     private static final String COL2 = "amount";
+
+    public LocalDatabaseFridge(SQLiteDatabase db){
+        super(db);
+    }
 
     @Override
     public String getCreateQuery() {
@@ -37,30 +41,29 @@ public class LocalDatabaseFridge implements DatabaseTableDefinition{
         return "DROP TABLE IF EXISTS " + NAME;
     }
 
-    public HashMap<Ingredient, Integer> getIngredientsInFridge(SQLiteDatabase db){
+    public HashMap<Ingredient, Double> getIngredientsInFridge(){
         Cursor cursor = db.rawQuery("SELECT * FROM " + NAME, null);
-        HashMap<Ingredient,Integer> res = new HashMap<>();
-        DatabaseIngredient databaseIngredient = new DatabaseIngredient();
+        HashMap<Ingredient,Double> res = new HashMap<>();
+        DatabaseIngredient databaseIngredient = new DatabaseIngredient(db);
         if(cursor.moveToFirst())
             do{
-                res.put(databaseIngredient.getIngredient(db, cursor.getInt(0)), cursor.getInt(1));
+                res.put(databaseIngredient.getIngredient(cursor.getInt(0)), cursor.getDouble(1));
             }while (cursor.moveToNext());
         cursor.close();
         return res;
     }
 
-    public long remove(SQLiteDatabase db, long id){
+    public long remove(long id){
         return db.delete(NAME, COL1 + "="+id, null);
     }
 
     /**
      *
-     * @param db
      * @param id for ingredient
      * @param amount of the given ingredient
      * @return true if added false if updated
      */
-    public boolean addIngredient(SQLiteDatabase db, long id, double amount){
+    public boolean addIngredient(long id, double amount){
         boolean added = false;
         ContentValues cv = new ContentValues();
         cv.put(COL1, id);
@@ -77,7 +80,7 @@ public class LocalDatabaseFridge implements DatabaseTableDefinition{
         return added;
     }
 
-    public double getAmount(SQLiteDatabase db, long id){
+    public double getAmount(long id){
         Cursor cursor = db.rawQuery("SELECT * FROM " + NAME + " WHERE "+COL1 +"="+id,null);
         double res = -1;
         if(cursor.moveToFirst())
@@ -85,8 +88,8 @@ public class LocalDatabaseFridge implements DatabaseTableDefinition{
         return res;
     }
 
-    public Map<Recipe, Double> searchRecipesByScore(SQLiteDatabase db, int numOfPeople, int limit) {
-        Map<Recipe, Double> res = new LinkedHashMap();
+    public Map<Recipe, Double> searchRecipesByScore(int numOfPeople, int limit) {
+        Map<Recipe, Double> res = new LinkedHashMap<>();
         String query = " SELECT * FROM " +
                 "(" +
                 " SELECT "+ DatabaseRecipeIngredient.COL1 +", AVG(Score) as RepScore FROM" +
@@ -111,5 +114,11 @@ public class LocalDatabaseFridge implements DatabaseTableDefinition{
         }
         cursor.close();
         return res;
+    }
+
+    public void changeAmount(long id, double amount){
+        ContentValues cv = new ContentValues();
+        cv.put(COL2, amount);
+        db.update(NAME, cv, COL1 + "=" + id,null);
     }
 }

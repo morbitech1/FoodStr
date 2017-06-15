@@ -11,11 +11,15 @@ import com.example.s164403.foodstr.database.Model.Task;
  * Created by s164403 on 6/14/2017.
  */
 
-public class DatabasePreRequisite   implements DatabaseTableDefinition{
+public class DatabasePreRequisite   extends DatabaseTableDefinition{
 
     public static final String NAME = "prerequisites";
     public static final String COL1 = "precedingTask";
     public static final String COL2 = "task";
+
+    public DatabasePreRequisite(SQLiteDatabase db){
+        super(db);
+    }
 
     @Override
     public String getDropQuery() {

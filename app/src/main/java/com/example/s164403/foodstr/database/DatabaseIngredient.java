@@ -18,7 +18,7 @@ import java.util.List;
  * Created by s164403 on 6/14/2017.
  */
 
-public class DatabaseIngredient implements DatabaseTableDefinition {
+public class DatabaseIngredient extends DatabaseTableDefinition {
     public static final String NAME = "Ingredients";
     public static final String COL1 = "id";
     public static final String COL2 = "name";
@@ -26,6 +26,10 @@ public class DatabaseIngredient implements DatabaseTableDefinition {
     // Maps to enum
     public static final String COL4 = "primaryUnit";
     private static DatabaseIngredient instance;
+
+    public DatabaseIngredient(SQLiteDatabase db){
+        super(db);
+    }
 
     @Override
     public String getCreateQuery() {
@@ -43,31 +47,25 @@ public class DatabaseIngredient implements DatabaseTableDefinition {
         return "DROP TABLE IF EXISTS " + NAME;
     }
 
-    public List<Ingredient> getAllIngredients(SQLiteDatabase db){
+    public List<Ingredient> getAllIngredients(){
         Cursor cursor = db.rawQuery("SELECT * FROM "+NAME ,null);
         List<Ingredient> result = new ArrayList<>();
         if(cursor.moveToFirst())
             do{
-                result.add(makeIngredient(cursor));
+                result.add(new Ingredient(cursor));
             }while(cursor.moveToNext());
         cursor.close();
         return result;
     }
 
-    public void addIngredients(SQLiteDatabase db, List<Ingredient> ingredients){
-        for(Ingredient ingredient : ingredients){
-            addIngredient(db, ingredient);
-        }
-    }
-
-    public boolean hasIngredient(SQLiteDatabase db, String name){
+    public boolean hasIngredient(String name){
         Cursor cursor = db.rawQuery("SELECT * FROM " + NAME + " WHERE " + COL2 +"= \""+name+"\"", null);
         boolean hasIngredient = cursor.moveToFirst();
         cursor.close();
         return hasIngredient;
     }
 
-    public long getId(SQLiteDatabase db, String name){
+    public long getId( String name){
         Cursor cursor = db.rawQuery("SELECT "+COL1+" FROM " + NAME + " WHERE " + COL2 +"= \""+name+"\"", null);
         long id;
         if(cursor.moveToFirst())
@@ -78,8 +76,8 @@ public class DatabaseIngredient implements DatabaseTableDefinition {
         return id;
     }
 
-    public long addIngredient(SQLiteDatabase db, Ingredient ingredient){
-        long id = getId(db, ingredient.name);
+    public long addIngredient(Ingredient ingredient){
+        long id = getId(ingredient.name);
         if (id < 0) {
             ContentValues cv = new ContentValues();
             cv.put(COL2, ingredient.name);
@@ -96,29 +94,27 @@ public class DatabaseIngredient implements DatabaseTableDefinition {
      * @param id to look up
      * @return null if id not present an ingredient otherwise
      */
-    public Ingredient getIngredient(SQLiteDatabase db, int id){
+    public Ingredient getIngredient( int id){
         Cursor cursor = db.rawQuery(
                 "SELECT * FROM " + NAME + " WHERE " + COL1 + " = " + id,null);
+        Ingredient res = null;
         if(cursor.moveToFirst())
-            return makeIngredient(cursor);
-        return null;
+            res =  new Ingredient(cursor);
+        cursor.close();
+        return res;
     }
 
-    public Ingredient getIngredient(SQLiteDatabase db, String name){
+    public Ingredient getIngredient(String name){
         Cursor cursor = db.rawQuery(
                 "SELECT * FROM " + NAME + " WHERE " + COL2 + "=\"" + name + "\""
                 ,null);
+        Ingredient res = null;
         if(cursor.moveToFirst())
-            return makeIngredient(cursor);
-        return null;
+            res = new Ingredient(cursor);
+        cursor.close();
+        return res;
     }
 
-    private Ingredient makeIngredient(Cursor cursor){
-        return new Ingredient(
-                cursor.getInt(0),
-                cursor.getString(1),
-                Ingredient.parseCsvAlias(cursor.getString(2)),
-                PrimaryUnit.valueOf(cursor.getString(3)));
-    }
+
 
 }
