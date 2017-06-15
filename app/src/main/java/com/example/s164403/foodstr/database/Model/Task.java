@@ -21,4 +21,12 @@ public class Task {
     public Recipe getRecipe() {
         throw new Error();
     }
+
+    public Task(int id, String name, boolean requireAttention, boolean cariesOnHot, List<Integer> preRequisiteIds) {
+        this.id = id;
+        this.name = name;
+        this.requireAttention = requireAttention;
+        this.cariesOnHot = cariesOnHot;
+        this.preRequisiteIds = preRequisiteIds;
+    }
 }

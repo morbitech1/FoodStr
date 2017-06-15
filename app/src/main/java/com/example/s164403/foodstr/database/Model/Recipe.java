@@ -7,9 +7,16 @@ import java.util.List;
  */
 
 public class Recipe {
+
     public int id;
     public String name;
     public String pictureUrl;
+
+    public Recipe(int id, String name, String pictureUrl) {
+        this.id = id;
+        this.name = name;
+        this.pictureUrl = pictureUrl;
+    }
 
     public List<Integer> relationIds;
 

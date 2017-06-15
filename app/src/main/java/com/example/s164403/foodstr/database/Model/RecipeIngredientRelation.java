@@ -10,4 +10,10 @@ public class RecipeIngredientRelation {
 
     // Number of primaryUnits in ingredient per person
     public int factor;
+
+    public RecipeIngredientRelation(Recipe recipe, Ingredient ingredient, int factor) {
+        this.recipe = recipe;
+        this.ingredient = ingredient;
+        this.factor = factor;
+    }
 }
