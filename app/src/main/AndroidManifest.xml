@@ -11,15 +11,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".TimelineActivity">
+        </activity>
+        <activity
+            android:name=".Fridge">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".Fridge"
-            android:label="@string/title_activity_timeline">
         </activity>
     </application>
 

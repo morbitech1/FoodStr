@@ -2,6 +2,7 @@ package com.example.s164403.foodstr.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -43,12 +44,21 @@ public class DatabaseRecipeIngredient implements DatabaseTableDefinition{
         rir.recipe.id = recipeId;
 
         for(Ingredient ingredient : rir.ingredients.keySet()){
-            dbIngredient.addIngredient(db, ingredient);
-            ContentValues cv = new ContentValues();
-            cv.put(COL1, rir.recipe.id);
-            cv.put(COL2, ingredient.id);
-            cv.put(COL3, rir.ingredients.get(ingredient));
-            db.insert(NAME, null, cv);
+            if(hasEntry(db, rir.recipe.id, ingredient.id)) {
+                dbIngredient.addIngredient(db, ingredient);
+                ContentValues cv = new ContentValues();
+                cv.put(COL1, rir.recipe.id);
+                cv.put(COL2, ingredient.id);
+                cv.put(COL3, rir.ingredients.get(ingredient));
+                db.insert(NAME, null, cv);
+            }
         }
+    }
+
+    public boolean hasEntry(SQLiteDatabase db, long recipeID, long ingredientID){
+        Cursor cursor = db.rawQuery("SELECT * FROM "+ NAME + " WHERE " + COL1 + "="+recipeID + " AND " + COL2 + "="+ingredientID, null);
+        boolean check = cursor.moveToFirst();
+        cursor.close();
+        return check;
     }
 }

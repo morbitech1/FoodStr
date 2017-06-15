@@ -69,8 +69,11 @@ public class Fridge extends AppCompatActivity {
                     }catch(Exception e){
                         a = -1;
                     }
-                    fridgeDB.addIngredient(db, i.id, a);
-                    fridge.addView(generateFridgeFragment(i, a, db));
+                    if(fridgeDB.addIngredient(db, i.id, a))
+                        fridge.addView(generateFridgeFragment(i, a, db));
+                    else {
+                        ((EditText)findViewById((int)i.id)).setText(""+fridgeDB.getAmount(db, i.id));
+                    }
                     ingredient.setText("");
                     amount.setText("");
                 }else{
@@ -96,6 +99,7 @@ public class Fridge extends AppCompatActivity {
         final LinearLayout fragment = (LinearLayout) getLayoutInflater().inflate(R.layout.fridge_fragment, null);
         TextView fridgeIngredient = (TextView) fragment.findViewById(R.id.fridge_ingredient);
         EditText fridgeAmount = (EditText) fragment.findViewById(R.id.fridge_amount);
+        fridgeAmount.setId((int)ingredient.id);
         ImageButton fridgeButton = (ImageButton) fragment.findViewById(R.id.fridge_remove);
         fridgeIngredient.setText(ingredient.name);
         Log.d("Test", ""+amount);

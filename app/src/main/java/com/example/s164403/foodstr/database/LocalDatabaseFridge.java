@@ -50,10 +50,35 @@ public class LocalDatabaseFridge implements DatabaseTableDefinition{
         return db.delete(NAME, COL1 + "="+id, null);
     }
 
-    public long addIngredient(SQLiteDatabase db, long id, double amount){
+    /**
+     *
+     * @param db
+     * @param id for ingredient
+     * @param amount of the given ingredient
+     * @return true if added false if updated
+     */
+    public boolean addIngredient(SQLiteDatabase db, long id, double amount){
+        boolean added = false;
         ContentValues cv = new ContentValues();
         cv.put(COL1, id);
         cv.put(COL2, amount);
-        return db.insert(NAME, null, cv);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + NAME + " WHERE " +COL1 + "="+id, null);
+        if(cursor.moveToFirst()){
+            cv.put(COL2, amount + cursor.getDouble(cursor.getColumnIndex(COL2)));
+            db.update(NAME, cv, COL1+ "="+id, null);
+        }else {
+            db.insert(NAME, null, cv);
+            added = true;
+        }
+        cursor.close();
+        return added;
+    }
+
+    public double getAmount(SQLiteDatabase db, long id){
+        Cursor cursor = db.rawQuery("SELECT * FROM " + NAME + " WHERE "+COL1 +"="+id,null);
+        double res = -1;
+        if(cursor.moveToFirst())
+            res = cursor.getDouble(cursor.getColumnIndex(COL2));
+        return res;
     }
 }
