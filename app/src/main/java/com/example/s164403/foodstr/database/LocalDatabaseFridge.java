@@ -15,54 +15,45 @@ import java.util.HashMap;
  * Created by Morbi95 on 14-Jun-17.
  */
 
-public class LocalDatabaseFridge extends SQLiteOpenHelper{
-    private final Context context;
-    private static final int VERSION = 4;
+public class LocalDatabaseFridge implements DatabaseTableDefinition{
     private static final String NAME = "fridge";
     private static final String COL1 = "ingredientId";
     private static final String COL2 = "amount";
 
-    public LocalDatabaseFridge(Context context){
-        super(context, context.getString(R.string.database_name), null,VERSION);
-        this.context = context;
-    }
-
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS "+ NAME +
+    public String getCreateQuery() {
+        return "CREATE TABLE "+ NAME +
                 "("+
-                COL1 + " INTEGER UNIQUE,"+
+                COL1 + " PRIMARY KEY,"+
                 COL2 + " DECIMAL(10,2)"+
-                ")"
-        );
+                ")";
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL("DROP TABLE IF EXISTS " + NAME);
-        onCreate(db);
+    public String getDropQuery() {
+        return "DROP TABLE IF EXISTS " + NAME;
     }
 
-    public HashMap<Ingredient, Integer> getIngredientsInFridge(){
-        Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + NAME, null);
+    public HashMap<Ingredient, Integer> getIngredientsInFridge(SQLiteDatabase db){
+        Cursor cursor = db.rawQuery("SELECT * FROM " + NAME, null);
         HashMap<Ingredient,Integer> res = new HashMap<>();
-        DatabaseIngredient databaseIngredient = new DatabaseIngredient(context);
+        DatabaseIngredient databaseIngredient = new DatabaseIngredient();
         if(cursor.moveToFirst())
             do{
-                res.put(databaseIngredient.getIngredient(cursor.getInt(0)), cursor.getInt(1));
+                res.put(databaseIngredient.getIngredient(db, cursor.getInt(0)), cursor.getInt(1));
             }while (cursor.moveToNext());
         cursor.close();
         return res;
     }
 
-    public long remove(long id){
-        return getWritableDatabase().delete(NAME, COL1 + "="+id, null);
+    public long remove(SQLiteDatabase db, long id){
+        return db.delete(NAME, COL1 + "="+id, null);
     }
 
-    public long addIngredient(long id, double amount){
+    public long addIngredient(SQLiteDatabase db, long id, double amount){
         ContentValues cv = new ContentValues();
         cv.put(COL1, id);
         cv.put(COL2, amount);
-        return getWritableDatabase().insert(NAME, null, cv);
+        return db.insert(NAME, null, cv);
     }
 }

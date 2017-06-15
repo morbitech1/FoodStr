@@ -18,38 +18,33 @@ import java.util.List;
  * Created by s164403 on 6/14/2017.
  */
 
-public class DatabaseIngredient extends SQLiteOpenHelper{
-    public static final int VERSION = 4;
+public class DatabaseIngredient implements DatabaseTableDefinition {
     public static final String NAME = "Ingredients";
     public static final String COL1 = "id";
     public static final String COL2 = "name";
     public static final String COL3 = "alias";
     // Maps to enum
     public static final String COL4 = "primaryUnit";
-
-    public DatabaseIngredient(Context context){
-        super(context, context.getString(R.string.database_name), null, VERSION);
-
-    }
+    private static DatabaseIngredient instance;
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL( "CREATE TABLE " + NAME + " (" +
+    public String getCreateQuery() {
+        return "CREATE TABLE " + NAME + " (" +
                 COL1 + " INTEGER PRIMARY KEY,"+
-                COL2 + " CHAR(45) UNIQUE("+COL2+" COLLATE NOCASE),"+
+                COL2 + " CHAR(45),"+
                 COL3 + " TEXT,"+
-                COL4 + " CHAR(10))"
-        );
+                COL4 + " CHAR(10)," +
+                "UNIQUE("+COL2+" COLLATE NOCASE)" +
+                ")";
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + NAME);
-        onCreate(db);
+    public String getDropQuery() {
+        return "DROP TABLE IF EXISTS " + NAME;
     }
 
-    public List<Ingredient> getAllIngredients(){
-        Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM "+NAME ,null);
+    public List<Ingredient> getAllIngredients(SQLiteDatabase db){
+        Cursor cursor = db.rawQuery("SELECT * FROM "+NAME ,null);
         List<Ingredient> result = new ArrayList<>();
         if(cursor.moveToFirst())
             do{
@@ -59,21 +54,21 @@ public class DatabaseIngredient extends SQLiteOpenHelper{
         return result;
     }
 
-    public void addIngredients(List<Ingredient> ingredients){
+    public void addIngredients(SQLiteDatabase db, List<Ingredient> ingredients){
         for(Ingredient ingredient : ingredients){
-            addIngredient(ingredient);
+            addIngredient(db, ingredient);
         }
     }
 
-    public boolean hasIngredient(String name){
-        Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + NAME + " WHERE " + COL2 +"= \""+name+"\"", null);
+    public boolean hasIngredient(SQLiteDatabase db, String name){
+        Cursor cursor = db.rawQuery("SELECT * FROM " + NAME + " WHERE " + COL2 +"= \""+name+"\"", null);
         boolean hasIngredient = cursor.moveToFirst();
         cursor.close();
         return hasIngredient;
     }
 
-    public long getId(String name){
-        Cursor cursor = getReadableDatabase().rawQuery("SELECT "+COL1+" FROM " + NAME + " WHERE " + COL2 +"= \""+name+"\"", null);
+    public long getId(SQLiteDatabase db, String name){
+        Cursor cursor = db.rawQuery("SELECT "+COL1+" FROM " + NAME + " WHERE " + COL2 +"= \""+name+"\"", null);
         long id;
         if(cursor.moveToFirst())
             id = cursor.getLong(0);
@@ -83,14 +78,14 @@ public class DatabaseIngredient extends SQLiteOpenHelper{
         return id;
     }
 
-    public long addIngredient(Ingredient ingredient){
-        long id = getId(ingredient.name);
+    public long addIngredient(SQLiteDatabase db, Ingredient ingredient){
+        long id = getId(db, ingredient.name);
         if (id < 0) {
             ContentValues cv = new ContentValues();
             cv.put(COL2, ingredient.name);
             cv.put(COL3, ingredient.getAliasCsv());
             cv.put(COL4, ingredient.primaryUnit.toString());
-            id = (int) getWritableDatabase().insert(NAME, null, cv);
+            id = (int) db.insert(NAME, null, cv);
         }
         ingredient.id = id;
         return id;
@@ -101,16 +96,16 @@ public class DatabaseIngredient extends SQLiteOpenHelper{
      * @param id to look up
      * @return null if id not present an ingredient otherwise
      */
-    public Ingredient getIngredient(int id){
-        Cursor cursor = getReadableDatabase().rawQuery(
+    public Ingredient getIngredient(SQLiteDatabase db, int id){
+        Cursor cursor = db.rawQuery(
                 "SELECT * FROM " + NAME + " WHERE " + COL1 + " = " + id,null);
         if(cursor.moveToFirst())
             return makeIngredient(cursor);
         return null;
     }
 
-    public Ingredient getIngredient(String name){
-        Cursor cursor = getReadableDatabase().rawQuery(
+    public Ingredient getIngredient(SQLiteDatabase db, String name){
+        Cursor cursor = db.rawQuery(
                 "SELECT * FROM " + NAME + " WHERE " + COL2 + "=\"" + name + "\""
                 ,null);
         if(cursor.moveToFirst())

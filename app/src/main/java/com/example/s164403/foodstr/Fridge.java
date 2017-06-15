@@ -1,5 +1,6 @@
 package com.example.s164403.foodstr;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,14 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.s164403.foodstr.database.DatabaseIngredient;
-import com.example.s164403.foodstr.database.DatabaseRecipeIngredient;
-import com.example.s164403.foodstr.database.DummyData;
-import com.example.s164403.foodstr.database.LocalDatabaseFridge;
-import com.example.s164403.foodstr.database.Model.Ingredient;
-import com.example.s164403.foodstr.database.Model.RecipeIngredientRelation;
+import com.example.s164403.foodstr.database.*;
+import com.example.s164403.foodstr.database.Model.*;
 
 import java.util.HashMap;
+
+import com.example.s164403.foodstr.database.DatabaseRecipeIngredient;
 
 public class Fridge extends AppCompatActivity {
 
@@ -33,17 +32,22 @@ public class Fridge extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.fridge);
         initializeUiElements();
-        DatabaseRecipeIngredient recipeIngredientDb = new DatabaseRecipeIngredient(this);
+
+        final MainDatabaseHelper databaseHelper = new MainDatabaseHelper(this);
+        final SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
+        DatabaseRecipeIngredient recipeIngredientDb = new DatabaseRecipeIngredient();
         for(RecipeIngredientRelation ri : DummyData.dummyRI()){
-            recipeIngredientDb.addRelation(ri);
+            recipeIngredientDb.addRelation(db, ri);
         }
 
-        final DatabaseIngredient databaseIngredient = new DatabaseIngredient(this);
+        final DatabaseIngredient databaseIngredient = new DatabaseIngredient();
         final ArrayAdapter<Ingredient> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_dropdown_item_1line, databaseIngredient.getAllIngredients());
-        Log.d("Ingredient list", databaseIngredient.getAllIngredients().toString());
+                android.R.layout.simple_dropdown_item_1line, databaseIngredient.getAllIngredients(db));
+        Log.d("Ingredient list", databaseIngredient.getAllIngredients(db).toString());
         ingredient.setAdapter(adapter);
         ingredient.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -56,17 +60,17 @@ public class Fridge extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Ingredient i = databaseIngredient.getIngredient(ingredient.getText().toString());
+                Ingredient i = databaseIngredient.getIngredient(db, ingredient.getText().toString());
                 if(i != null){
-                    LocalDatabaseFridge fridgeDB = new LocalDatabaseFridge(getApplicationContext());
+                    LocalDatabaseFridge fridgeDB = new LocalDatabaseFridge();
                     double a;
                     try{
                         a = Double.parseDouble(amount.getText().toString());
                     }catch(Exception e){
                         a = -1;
                     }
-                    fridgeDB.addIngredient(i.id, a);
-                    fridge.addView(generateFridgeFragment(i, a, fridgeDB));
+                    fridgeDB.addIngredient(db, i.id, a);
+                    fridge.addView(generateFridgeFragment(i, a, db));
                     ingredient.setText("");
                     amount.setText("");
                 }else{
@@ -78,16 +82,17 @@ public class Fridge extends AppCompatActivity {
     }
 
     public void updateFridge(){
-        LocalDatabaseFridge fridgeDB = new LocalDatabaseFridge(this);
-        HashMap<Ingredient, Integer> ingredients = fridgeDB.getIngredientsInFridge();
+        SQLiteDatabase db = new MainDatabaseHelper(this).getWritableDatabase();
+        LocalDatabaseFridge fridgeDB = new LocalDatabaseFridge();
+        HashMap<Ingredient, Integer> ingredients = fridgeDB.getIngredientsInFridge(db);
         fridge.removeAllViews();
         for(final Ingredient ingredient : ingredients.keySet()){
-            fridge.addView(generateFridgeFragment(ingredient, ingredients.get(ingredient), fridgeDB));
+            fridge.addView(generateFridgeFragment(ingredient, ingredients.get(ingredient), db));
             Log.d("Fridge", ""+fridge.getChildCount());
         }
     }
 
-    private LinearLayout generateFridgeFragment(final Ingredient ingredient, double amount, final LocalDatabaseFridge fridgeDB){
+    private LinearLayout generateFridgeFragment(final Ingredient ingredient, double amount, final SQLiteDatabase db){
         final LinearLayout fragment = (LinearLayout) getLayoutInflater().inflate(R.layout.fridge_fragment, null);
         TextView fridgeIngredient = (TextView) fragment.findViewById(R.id.fridge_ingredient);
         EditText fridgeAmount = (EditText) fragment.findViewById(R.id.fridge_amount);
@@ -99,7 +104,7 @@ public class Fridge extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 fridge.removeView(fragment);
-                fridgeDB.remove(ingredient.id);
+                new LocalDatabaseFridge().remove(db, ingredient.id);
             }
         });
         return fragment;

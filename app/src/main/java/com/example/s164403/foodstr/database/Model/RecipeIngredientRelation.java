@@ -10,6 +10,8 @@ public class RecipeIngredientRelation {
     public Recipe recipe;
     public HashMap<Ingredient, Double> ingredients;
 
+    // Number of primaryUnits in ingredient per person
+    public int factor;
 
     public RecipeIngredientRelation(Recipe recipe, HashMap<Ingredient, Double> ingredients) {
         this.recipe = recipe;

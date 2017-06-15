@@ -5,33 +5,30 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.s164403.foodstr.R;
+import com.example.s164403.foodstr.database.Model.Task;
 
 /**
  * Created by s164403 on 6/14/2017.
  */
 
-public class DatabasePreRequisite extends SQLiteOpenHelper{
+public class DatabasePreRequisite   implements DatabaseTableDefinition{
 
-    public static final int VERSION = 1;
-    public static final String NAME = "task";
+    public static final String NAME = "prerequisites";
     public static final String COL1 = "precedingTask";
     public static final String COL2 = "task";
 
-    public DatabasePreRequisite(Context context){
-        super(context,context.getString(R.string.database_name),null, VERSION);
+    @Override
+    public String getDropQuery() {
+        return "DROP TABLE IF EXISTS " + NAME;
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL( "CREATE TABLE " + NAME + " (" +
-                COL1 + " INTEGER FOREIGN KEY,"+
-                COL2 + " INTEGER FOREIGN KEY)"
-        );
+    public String getCreateQuery() {
+        return "CREATE TABLE " + NAME + " (" +
+                COL1 + " INTEGER NOT NULL REFERENCES "+ DatabaseTask.NAME + "(" + DatabaseTask.COL1 + ")," +
+                COL2 + " INTEGER NOT NULL REFERENCES "+ DatabaseTask.NAME + "(" + DatabaseTask.COL1 + ")," +
+                "PRIMARY KEY (" + COL1 + ", " + COL2 + ")" +
+                ")";
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + NAME);
-        onCreate(db);
-    }
 }
