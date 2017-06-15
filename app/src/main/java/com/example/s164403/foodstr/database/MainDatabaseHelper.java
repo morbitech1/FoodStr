@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 public class MainDatabaseHelper extends SQLiteOpenHelper {
-    public static final int VERSION = 1;
+    public static final int VERSION = 3;
 
     private final DatabaseTableDefinition[] definitions = {
         new DatabaseIngredient(),
