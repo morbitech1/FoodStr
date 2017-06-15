@@ -2,6 +2,7 @@ package com.example.s164403.foodstr.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -13,11 +14,12 @@ import com.example.s164403.foodstr.database.Model.Recipe;
  */
 
 public class DatabaseRecipe extends SQLiteOpenHelper{
-    public static final int VERSION = 1;
+    public static final int VERSION = 4;
     public static final String NAME = "Recipe";
     public static final String COL1 = "id";
     public static final String COL2 = "name";
     public static final String COL3 = "pictureURL";
+    public static final String COL4 = "description";
 
     public DatabaseRecipe(Context context){
         super(context, context.getString(R.string.database_name),null, VERSION);
@@ -25,10 +27,11 @@ public class DatabaseRecipe extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL( "CREATE TABLE " + NAME + " (" +
+        db.execSQL( "CREATE TABLE IF NOT EXISTS " + NAME + " (" +
                 COL1 + " INTEGER PRIMARY KEY,"+
-                COL2 + " TEXT," +
-                COL3 + " TEXT)"
+                COL2 + " TEXT NOT NULL," +
+                COL3 + " TEXT," +
+                COL4 + " TEXT )"
         );
     }
 
@@ -38,10 +41,27 @@ public class DatabaseRecipe extends SQLiteOpenHelper{
         onCreate(db);
     }
 
-    public long addRecipe(Recipe recipe){
+    public long addRecipe(Recipe recipe) {
         ContentValues cv = new ContentValues();
         cv.put(COL2, recipe.name);
         cv.put(COL3, recipe.pictureUrl);
+        cv.put(COL4, recipe.description);
         return getWritableDatabase().insert(NAME, null, cv);
+    }
+
+    public boolean hasRecipe(String name){
+        Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + NAME + " WHERE " + COL2 + "=\""+name+"\"", null);
+        boolean check = cursor.moveToFirst();
+        cursor.close();
+        return check;
+    }
+
+    public long getId(String name){
+        Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + NAME + " WHERE " + COL2 + "=\""+name+"\"", null);
+        long id = -1;
+        if(cursor.moveToFirst())
+            id = cursor.getLong(cursor.getColumnIndex(COL1));
+        cursor.close();
+        return id;
     }
 }

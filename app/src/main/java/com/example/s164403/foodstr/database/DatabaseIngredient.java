@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 public class DatabaseIngredient extends SQLiteOpenHelper{
-    public static final int VERSION = 2;
+    public static final int VERSION = 4;
     public static final String NAME = "Ingredients";
     public static final String COL1 = "id";
     public static final String COL2 = "name";
@@ -36,7 +36,7 @@ public class DatabaseIngredient extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         db.execSQL( "CREATE TABLE " + NAME + " (" +
                 COL1 + " INTEGER PRIMARY KEY,"+
-                COL2 + " CHAR(45) UNIQUE,"+
+                COL2 + " CHAR(45) UNIQUE("+COL2+" COLLATE NOCASE),"+
                 COL3 + " TEXT,"+
                 COL4 + " CHAR(10))"
         );
@@ -72,15 +72,28 @@ public class DatabaseIngredient extends SQLiteOpenHelper{
         return hasIngredient;
     }
 
+    public long getId(String name){
+        Cursor cursor = getReadableDatabase().rawQuery("SELECT "+COL1+" FROM " + NAME + " WHERE " + COL2 +"= \""+name+"\"", null);
+        long id;
+        if(cursor.moveToFirst())
+            id = cursor.getLong(0);
+        else
+            id = -1;
+        cursor.close();
+        return id;
+    }
+
     public long addIngredient(Ingredient ingredient){
-        if (!hasIngredient(ingredient.name)) {
+        long id = getId(ingredient.name);
+        if (id < 0) {
             ContentValues cv = new ContentValues();
             cv.put(COL2, ingredient.name);
             cv.put(COL3, ingredient.getAliasCsv());
             cv.put(COL4, ingredient.primaryUnit.toString());
-            return getWritableDatabase().insert(NAME, null, cv);
+            id = (int) getWritableDatabase().insert(NAME, null, cv);
         }
-        return -1;
+        ingredient.id = id;
+        return id;
     }
 
     /**

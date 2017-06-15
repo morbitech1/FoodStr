@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
  */
 
 public class Ingredient {
-    public final int id;
+    public  long id;
     public final String name;
     public final String[] aliases;
     public final PrimaryUnit primaryUnit;
@@ -46,6 +46,11 @@ public class Ingredient {
             res.add(stringTokenizer.nextToken());
         }
         return res.toArray(new String[res.size()]);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Ingredient && ((Ingredient)obj).name.equals(this.name);
     }
 
     public String toString(){
