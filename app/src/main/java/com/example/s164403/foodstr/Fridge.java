@@ -1,9 +1,8 @@
 package com.example.s164403.foodstr;
 
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,15 +15,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.s164403.foodstr.database.*;
-import com.example.s164403.foodstr.database.Model.*;
+import com.example.s164403.foodstr.database.DatabaseIngredient;
+import com.example.s164403.foodstr.database.DatabaseRecipeIngredient;
+import com.example.s164403.foodstr.database.DummyData;
+import com.example.s164403.foodstr.database.LocalDatabaseFridge;
+import com.example.s164403.foodstr.database.MainDatabaseHelper;
+import com.example.s164403.foodstr.database.Model.Ingredient;
+import com.example.s164403.foodstr.database.Model.Recipe;
+import com.example.s164403.foodstr.database.Model.RecipeIngredientRelation;
 
 import java.util.HashMap;
+import java.util.Map;
 
-import com.example.s164403.foodstr.database.DatabaseRecipeIngredient;
+public class Fridge extends AppCompatActivity{
 
-public class Fridge extends AppCompatActivity {
-
+    public final static String TAG = "Fridge-Activity";
     Button add;
     AutoCompleteTextView ingredient;
     EditText amount;
@@ -38,11 +43,16 @@ public class Fridge extends AppCompatActivity {
 
         final MainDatabaseHelper databaseHelper = new MainDatabaseHelper(this);
         final SQLiteDatabase db = databaseHelper.getWritableDatabase();
-
         DatabaseRecipeIngredient recipeIngredientDb = new DatabaseRecipeIngredient();
+        LocalDatabaseFridge fridgeDb = new LocalDatabaseFridge();
+
         for(RecipeIngredientRelation ri : DummyData.dummyRI()){
             recipeIngredientDb.addRelation(db, ri);
         }
+
+         Map<Recipe, Double> res = fridgeDb.searchRecipesByScore(db, 4, 10);
+        Log.i(TAG, res.toString());
+
 
         final DatabaseIngredient databaseIngredient = new DatabaseIngredient();
         final ArrayAdapter<Ingredient> adapter = new ArrayAdapter<>(this,

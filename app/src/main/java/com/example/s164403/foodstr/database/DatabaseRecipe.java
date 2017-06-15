@@ -1,13 +1,9 @@
 package com.example.s164403.foodstr.database;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.ContactsContract;
 
-import com.example.s164403.foodstr.R;
 import com.example.s164403.foodstr.database.Model.Recipe;
 
 /**
@@ -34,7 +30,6 @@ public class DatabaseRecipe implements DatabaseTableDefinition{
     public String getDropQuery() {
         return "DROP TABLE IF EXISTS " + NAME;
     }
-
 
     public long addRecipe(SQLiteDatabase db, Recipe recipe){
         ContentValues cv = new ContentValues();
