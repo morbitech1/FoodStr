@@ -20,7 +20,6 @@ import com.example.s164403.foodstr.database.LocalDatabaseFridge;
 import com.example.s164403.foodstr.database.Model.Ingredient;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class Fridge extends AppCompatActivity {
 
@@ -36,7 +35,7 @@ public class Fridge extends AppCompatActivity {
         final DatabaseIngredient databaseIngredient = new DatabaseIngredient(this);
         databaseIngredient.addIngredients(DummyData.dummyIngredients());
 
-        final ArrayAdapter<Ingredient> adapter = new ArrayAdapter<Ingredient>(this,
+        final ArrayAdapter<Ingredient> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, databaseIngredient.getAllIngredients());
         Log.d("Ingredient list", databaseIngredient.getAllIngredients().toString());
         ingredient.setAdapter(adapter);
@@ -66,6 +65,7 @@ public class Fridge extends AppCompatActivity {
                 }
             }
         });
+        updateFridge();
     }
 
     public void updateFridge(){
