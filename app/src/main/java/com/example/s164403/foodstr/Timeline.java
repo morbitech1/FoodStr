@@ -1,5 +1,7 @@
 package com.example.s164403.foodstr;
 
+import com.example.s164403.foodstr.database.Model.Recipe;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -61,9 +63,13 @@ public class Timeline {
         if (end > finishtime) finishtime = end;
     }
 
+    public int getFinishTime(){return finishtime;}
+    public ArrayList<RecipeStep> getSteps(){return steps;}
+
     public void sort(){
         //Reset our alarms - we will calculate them here
         alarms = new HashMap<Integer, StepAlarm>();
+        finishtime = 0;
 
         //Sort the important steps (the warm steps that require hands)
         ArrayList<RecipeStep> prioritysteps = new ArrayList<RecipeStep>();
@@ -134,23 +140,23 @@ public class Timeline {
         return alarms;
     }
 
-    public static void main(String args[]){
+    public static Timeline getTestTimeline(){
         Timeline tester = new Timeline();
 
         RecipeStep r1 = new RecipeStep("1");
-        r1.setTime(2);
+        r1.setTime(20);
         r1.setHot(true);
         r1.setNeedsHand(true);
         tester.addStep(r1);
 
         RecipeStep r2 = new RecipeStep("2");
-        r2.setTime(5);
+        r2.setTime(50);
         r2.setHot(true);
         r2.setNeedsHand(true);
         tester.addStep(r2);
 
         RecipeStep r3 = new RecipeStep("3");
-        r3.setTime(1);
+        r3.setTime(10);
         r3.setHot(false);
         r3.setNeedsHand(true);
         tester.addStep(r3);
@@ -162,32 +168,34 @@ public class Timeline {
         tester.addStep(r4);
 
         RecipeStep r5 = new RecipeStep("5");
-        r5.setTime(3);
+        r5.setTime(30);
         r5.setHot(true);
         r5.setNeedsHand(false);
         tester.addStep(r5);
 
         RecipeStep r6 = new RecipeStep("6");
-        r6.setTime(7);
+        r6.setTime(70);
         r6.setHot(false);
         r6.setNeedsHand(false);
         tester.addStep(r6);
 
         RecipeStep r7 = new RecipeStep("7");
-        r7.setTime(2);
+        r7.setTime(20);
         r7.setHot(true);
         r7.setNeedsHand(false);
         tester.addStep(r7);
 
         tester.sort();
 
-        System.out.println(r1.toString());
-        System.out.println(r2.toString());
-        System.out.println(r3.toString());
-        System.out.println(r4.toString());
-        System.out.println(r5.toString());
-        System.out.println(r6.toString());
-        System.out.println(r7.toString());
+        return tester;
+    }
+
+    public static void main(String args[]){
+        Timeline tester = getTestTimeline();
+
+        for (RecipeStep step : tester.getSteps()){
+            System.out.println(step.toString());
+        }
 
         for (StepAlarm a : tester.getAlarmTimes().values()){
             System.out.println(a.toString());
