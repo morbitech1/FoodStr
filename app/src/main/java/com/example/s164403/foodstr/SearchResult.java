@@ -2,8 +2,11 @@ package com.example.s164403.foodstr;
 
 import android.app.Fragment;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,11 +26,13 @@ import java.util.Map;
  * Created by Morbi95 on 15-Jun-17.
  */
 
-public class SearchResult extends Fragment {
+public class SearchResult extends Fragment implements OnSearchCompleted {
     EditText filter, numOfPeople;
     ListView recipes;
     SQLiteDatabase db;
     public final static String TAG = "Search-Result-Fragment";
+    private SearchInDatabaseTask currentSearchInDatabaseTask;
+    private static final int DEFAULT_MAX_RESULTS = 10;
 
     @Nullable
     @Override
@@ -39,14 +44,28 @@ public class SearchResult extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         filter = (EditText) getActivity().findViewById(R.id.filter);
+
+
+        TextWatcher searchOnChangeWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                startSearchTask();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        };
+
+        filter.addTextChangedListener(searchOnChangeWatcher);
+
         numOfPeople = (EditText) getActivity().findViewById(R.id.person_count);
+        numOfPeople.addTextChangedListener(searchOnChangeWatcher);
         recipes = (ListView) getActivity().findViewById(R.id.recipes);
         db = new MainDatabaseHelper(getActivity()).getWritableDatabase();
-        LocalDatabaseFridge fridgeDB = new LocalDatabaseFridge(db);
-        Map<Recipe, Double> searchResult = fridgeDB.searchRecipesByScore(
-                Integer.parseInt(numOfPeople.getText().toString()), 10);
-        Log.d(TAG, "Results from search: " + searchResult.toString());
-        recipes.setAdapter(new SearchResultAdapter(getActivity(), searchResult));
+        startSearchTask();
         recipes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -64,4 +83,74 @@ public class SearchResult extends Fragment {
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (db != null) {
+            db.close();
+        }
+    }
+
+    @Override
+    public void onSearchCompleted(Map<Recipe, Double> searchResult) {
+        Log.d(TAG, "Results from search: " + searchResult.toString());
+        recipes.setAdapter(new SearchResultAdapter(getActivity(), searchResult));
+    }
+
+    private void startSearchTask() {
+        if (currentSearchInDatabaseTask != null) {
+            if (currentSearchInDatabaseTask.cancel(true)) {
+                return;
+            }
+        }
+        currentSearchInDatabaseTask = new SearchInDatabaseTask(this);
+
+        SearchQuery query = new SearchQuery();
+        query.databaseFridge = new LocalDatabaseFridge(db);
+        try {
+            query.numOfPeople = Integer.parseInt(numOfPeople.getText().toString());
+        } catch (NumberFormatException ex) {
+            query.numOfPeople = Integer.parseInt(getResources().getString(R.string.search_default_number_people));
+        }
+        query.filter = filter.getText().toString();
+        query.limit = DEFAULT_MAX_RESULTS;
+
+        currentSearchInDatabaseTask.execute(query);
+    }
+
+    private class SearchQuery {
+        String filter;
+        int numOfPeople;
+        int limit;
+        LocalDatabaseFridge databaseFridge;
+    }
+
+
+    private class SearchInDatabaseTask extends AsyncTask<SearchQuery, Void, Map<Recipe, Double>> {
+        private OnSearchCompleted mCallback;
+
+        public SearchInDatabaseTask(OnSearchCompleted callback) {
+            mCallback = callback;
+        }
+
+        @Override
+        protected void onPostExecute(Map<Recipe, Double> recipeDoubleMap) {
+            mCallback.onSearchCompleted(recipeDoubleMap);
+        }
+
+        @Override
+        protected Map<Recipe, Double> doInBackground(SearchQuery... params) {
+            Map<Recipe, Double> searchResult = null;
+            if (params.length >= 1) {
+                SearchQuery query = params[0];
+                searchResult = query.databaseFridge.searchRecipesByScore(
+                        query.numOfPeople, query.limit, query.filter);
+            }
+            return searchResult;
+        }
+    }
+}
+
+interface OnSearchCompleted{
+    void onSearchCompleted(Map<Recipe, Double> searchRes);
 }

@@ -4,8 +4,6 @@ import android.app.Fragment;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.s164403.foodstr.database.DatabaseIngredient;
@@ -29,10 +23,6 @@ import com.example.s164403.foodstr.database.LocalDatabaseFridge;
 import com.example.s164403.foodstr.database.MainDatabaseHelper;
 import com.example.s164403.foodstr.database.Model.Ingredient;
 import com.example.s164403.foodstr.database.Model.RecipeIngredientRelation;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class Fridge extends Fragment {
 
@@ -60,6 +50,13 @@ public class Fridge extends Fragment {
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (db != null) {
+            db.close();
+        }
+    }
 
     private void initializeDatabase() {
         databaseHelper = new MainDatabaseHelper(getActivity());

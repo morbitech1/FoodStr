@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:hint="@string/filter_search" />
 
         <EditText
             android:id="@+id/person_count"
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="numberSigned"
-            android:text="4" />
+            android:hint="@string/search_default_number_people"/>
 
     </LinearLayout>
 
