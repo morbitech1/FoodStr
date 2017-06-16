@@ -59,4 +59,13 @@ public class DatabaseRecipe extends DatabaseTableDefinition{
         cursor.close();
         return id;
     }
+
+    public Recipe getRecipe(long recipeId){
+        Cursor cursor = db.rawQuery("SELECT * FROM " + NAME + " WHERE " + COL1 + "="+recipeId, null);
+        Recipe res = null;
+        if(cursor.moveToFirst())
+            res = new Recipe(cursor);
+        cursor.close();
+        return res;
+    }
 }

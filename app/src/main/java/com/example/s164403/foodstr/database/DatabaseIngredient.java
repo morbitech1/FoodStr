@@ -95,7 +95,7 @@ public class DatabaseIngredient extends DatabaseTableDefinition {
      * @param id to look up
      * @return null if id not present an ingredient otherwise
      */
-    public Ingredient getIngredient( int id){
+    public Ingredient getIngredient( long id){
         Cursor cursor = db.rawQuery(
                 "SELECT * FROM " + NAME + " WHERE " + COL1 + " = " + id,null);
         Ingredient res = null;

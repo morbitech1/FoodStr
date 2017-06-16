@@ -5,7 +5,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.s164403.foodstr.database.Model.Ingredient;
+import com.example.s164403.foodstr.database.Model.Recipe;
 import com.example.s164403.foodstr.database.Model.RecipeIngredientRelation;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by s164403 on 6/14/2017.
@@ -55,6 +59,21 @@ public class DatabaseRecipeIngredient extends DatabaseTableDefinition{
                 db.insert(NAME, null, cv);
             }
         }
+    }
+
+    public RecipeIngredientRelation getRecipeIngredientRelation(long recipeId){
+        Cursor cursor = db.rawQuery("SELECT * FROM " + NAME + " WHERE "+ COL1 + "=" +recipeId, null);
+        Recipe recipe = new DatabaseRecipe(db).getRecipe(recipeId);
+        DatabaseIngredient ingredientDB = new DatabaseIngredient(db);
+        Map<Ingredient, Double> ingredientDoubleMap = new HashMap<>();
+        if(cursor.moveToFirst()){
+            do {
+                long ingredientId = cursor.getLong(cursor.getColumnIndex(COL2));
+                double factor = cursor.getDouble(cursor.getColumnIndex(COL3));
+                ingredientDoubleMap.put(ingredientDB.getIngredient(ingredientId), factor);
+            }while(cursor.moveToNext());
+        }
+        return new RecipeIngredientRelation(recipe, ingredientDoubleMap);
     }
 
     public boolean hasEntry(long recipeID, long ingredientID){
