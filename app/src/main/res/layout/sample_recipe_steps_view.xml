@@ -4,41 +4,75 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+
+    <view
+        android:id="@+id/RecipeStepsView"
+        class="com.example.s164403.foodstr.RecipeStepsView"
+        id="@+id/view3"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"/>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal"
-        android:weightSum="1">
-
-        <LinearLayout
-            android:layout_width="280dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"></LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginRight="10dp">
-
-            <ImageButton
-                android:id="@+id/imageButton10"
-                android:layout_width="76dp"
-                android:layout_height="match_parent"
-                android:maxHeight="45dp"
-                android:maxWidth="45dp"
-                android:scaleType="fitCenter"
-                app2:srcCompat="@drawable/handsymbol" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <com.example.s164403.foodstr.RecipeStepsView
-        android:id="@+id/recipeStepsView"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
-        android:layout_marginRight="20dp" />
+        <ImageButton
+            android:id="@+id/optionsbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/timetext"
+            android:layout_marginStart="51dp"
+            android:maxHeight="45dp"
+            android:maxWidth="45dp"
+            android:scaleType="fitCenter"
+            app2:srcCompat="@drawable/optionsicon" />
 
+        <TextView
+            android:id="@+id/nametext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="Hamburger"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/timetext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="17dp"
+            android:text="0-10"
+            android:textSize="24sp"
+            android:layout_alignTop="@+id/handsymbol"
+            android:layout_alignEnd="@+id/handsymbol" />
+
+        <TextView
+            android:id="@+id/min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="min"
+            android:layout_below="@+id/timetext"
+            android:layout_alignStart="@+id/timetext"
+            android:layout_marginStart="10dp" />
+
+        <ImageView
+            android:id="@+id/handsymbol"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="47dp"
+            android:scaleType="fitCenter"
+            app2:srcCompat="@drawable/handsymbol" /><![CDATA[
+
+        />
+
+    ]]>
+    </RelativeLayout>
 
 </FrameLayout>
