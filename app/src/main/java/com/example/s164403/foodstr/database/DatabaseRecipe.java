@@ -10,12 +10,16 @@ import com.example.s164403.foodstr.database.Model.Recipe;
  * Created by s164403 on 6/14/2017.
  */
 
-public class DatabaseRecipe implements DatabaseTableDefinition{
+public class DatabaseRecipe extends DatabaseTableDefinition{
     public static final String NAME = "Recipe";
     public static final String COL1 = "id";
     public static final String COL2 = "name";
     public static final String COL3 = "pictureURL";
     public static final String COL4 = "description";
+
+    public DatabaseRecipe(SQLiteDatabase db){
+        super(db);
+    }
 
     @Override
     public String getCreateQuery() {
@@ -31,7 +35,7 @@ public class DatabaseRecipe implements DatabaseTableDefinition{
         return "DROP TABLE IF EXISTS " + NAME;
     }
 
-    public long addRecipe(SQLiteDatabase db, Recipe recipe){
+    public long addRecipe(Recipe recipe){
         ContentValues cv = new ContentValues();
         cv.put(COL2, recipe.name);
         cv.put(COL3, recipe.pictureUrl);
@@ -39,7 +43,7 @@ public class DatabaseRecipe implements DatabaseTableDefinition{
         return db.insert(NAME, null, cv);
     }
 
-    public boolean hasRecipe(SQLiteDatabase db, String name){
+    public boolean hasRecipe(String name){
         Cursor cursor = db.rawQuery("SELECT * FROM " + NAME + " WHERE " + COL2 + "=\""+name+"\"", null);
         boolean check = cursor.moveToFirst();
         cursor.close();

@@ -13,9 +13,9 @@ import java.util.List;
 public class Recipe {
 
     public long id;
-    public String name;
-    public String pictureUrl;
-    public String description;
+    final public String name;
+    final public String pictureUrl;
+    final public String description;
 
     public Recipe(long id, String name, String pictureUrl, String description) {
         this.id = id;

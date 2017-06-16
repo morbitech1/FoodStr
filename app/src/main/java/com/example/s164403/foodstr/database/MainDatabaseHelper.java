@@ -17,12 +17,12 @@ public class MainDatabaseHelper extends SQLiteOpenHelper {
     public static final int VERSION = 3;
 
     private final DatabaseTableDefinition[] definitions = {
-        new DatabaseIngredient(),
-        new DatabaseRecipe(),
-        new DatabaseTask(),
-        new DatabaseRecipeIngredient(),
-        new LocalDatabaseFridge(),
-        new DatabasePreRequisite()
+            new DatabaseIngredient(getWritableDatabase()),
+        new DatabaseRecipe(getWritableDatabase()),
+        new DatabaseTask(getWritableDatabase()),
+        new DatabaseRecipeIngredient(getWritableDatabase()),
+        new LocalDatabaseFridge(getWritableDatabase()),
+        new DatabasePreRequisite(getWritableDatabase())
     };
 
     public MainDatabaseHelper(Context context){

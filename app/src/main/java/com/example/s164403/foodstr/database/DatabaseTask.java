@@ -10,13 +10,17 @@ import com.example.s164403.foodstr.R;
  * Created by s164403 on 6/14/2017.
  */
 
-public class DatabaseTask implements DatabaseTableDefinition {
+public class DatabaseTask extends DatabaseTableDefinition {
     public static final String NAME = "task";
     public static final String COL1 = "id";
     public static final String COL2 = "recipe_id";
     public static final String COL3 = "duration";
     public static final String COL4 = "hot";
     public static final String COL5 = "hands";
+
+    public DatabaseTask(SQLiteDatabase db){
+        super(db);
+    }
 
     @Override
     public String getCreateQuery() {
