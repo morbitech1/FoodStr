@@ -98,7 +98,11 @@ public class LocalDatabaseFridge extends DatabaseTableDefinition{
                 "(" +
                 " SELECT "+ DatabaseRecipeIngredient.COL1 +", AVG(Score) as RepScore FROM" +
                 "(" +
-                " SELECT " + DatabaseRecipeIngredient.COL1 + ", case when Score > 100 then 100 else Score end as Score FROM (" +
+                " SELECT " + DatabaseRecipeIngredient.COL1 + ", case " +
+                "when Score > 100 then 100 " +
+                "when Score < 0 then 100 " +
+                "else Score " +
+                "end as Score FROM (" +
                 " SELECT "+ DatabaseRecipeIngredient.NAME +"."+ DatabaseRecipeIngredient.COL1 +"," +
                 DatabaseRecipeIngredient.NAME +"."+ DatabaseRecipeIngredient.COL2 +"," +
                 " ifnull(100*("+ LocalDatabaseFridge.NAME + "." + LocalDatabaseFridge.COL2 +")/(" + DatabaseRecipeIngredient.NAME +"."+ DatabaseRecipeIngredient.COL3 + "*" + numOfPeople + "), 0) as Score" +

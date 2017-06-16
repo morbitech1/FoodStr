@@ -1,13 +1,10 @@
 package com.example.s164403.foodstr.database;
 
 import android.content.Context;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.s164403.foodstr.R;
-
-import java.util.List;
 
 /**
  * Created by aMoe on 15-06-2017.
@@ -25,7 +22,7 @@ public class MainDatabaseHelper extends SQLiteOpenHelper {
             new DatabasePreRequisite()};
 
     public MainDatabaseHelper(Context context){
-        super(context,context.getString(R.string.database_name),null, VERSION);
+        super(context,context.getString(R.string.database_name), null, VERSION);
         for(DatabaseTableDefinition dbt : definitions){
             dbt.setDatabase(getWritableDatabase());
         }

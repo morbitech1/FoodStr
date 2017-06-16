@@ -1,17 +1,13 @@
 package com.example.s164403.foodstr;
 
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.provider.AlarmClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -94,7 +90,7 @@ public class TimelineActivity extends AppCompatActivity {
                 intent.putExtra(AlarmClock.EXTRA_SKIP_UI, true);
                 startActivityForResult(intent, alarm.getTime());*/
 
-                Intent intent = new Intent(AlarmNotificationReceiver.INTENT_BROADCAST);
+                Intent intent = new Intent();
                 intent.putExtra("recipe", "Noget mad");
                 intent.putExtra("start", alarm.getStartingString());
                 intent.putExtra("end", alarm.getEndingString());
