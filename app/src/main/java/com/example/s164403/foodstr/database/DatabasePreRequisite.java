@@ -17,8 +17,9 @@ public class DatabasePreRequisite   extends DatabaseTableDefinition{
     public static final String COL1 = "precedingTask";
     public static final String COL2 = "task";
 
+    public DatabasePreRequisite(){}
     public DatabasePreRequisite(SQLiteDatabase db){
-        super(db);
+        this.db=db;
     }
 
     @Override

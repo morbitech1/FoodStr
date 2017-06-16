@@ -17,16 +17,18 @@ public class MainDatabaseHelper extends SQLiteOpenHelper {
     public static final int VERSION = 3;
 
     private final DatabaseTableDefinition[] definitions = {
-            new DatabaseIngredient(getWritableDatabase()),
-        new DatabaseRecipe(getWritableDatabase()),
-        new DatabaseTask(getWritableDatabase()),
-        new DatabaseRecipeIngredient(getWritableDatabase()),
-        new LocalDatabaseFridge(getWritableDatabase()),
-        new DatabasePreRequisite(getWritableDatabase())
-    };
+            new DatabaseIngredient(),
+            new DatabaseRecipe(),
+            new DatabaseTask(),
+            new DatabaseRecipeIngredient(),
+            new LocalDatabaseFridge(),
+            new DatabasePreRequisite()};
 
     public MainDatabaseHelper(Context context){
         super(context,context.getString(R.string.database_name),null, VERSION);
+        for(DatabaseTableDefinition dbt : definitions){
+            dbt.setDatabase(getWritableDatabase());
+        }
     }
 
     @Override

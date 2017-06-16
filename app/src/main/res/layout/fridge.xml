@@ -17,7 +17,7 @@
             android:layout_weight="6"
             android:hint="Ingredient"
             android:inputType="text"
-            android:imeOptions="actionNext"/>
+            android:imeOptions="flagNoExtractUi"/>
 
         <EditText
             android:id="@+id/amount"
@@ -31,7 +31,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="+" />
+
+            android:text="+"
+            android:background="@android:color/holo_green_light"
+            android:textSize="30sp" />
 
     </LinearLayout>
 

@@ -17,8 +17,9 @@ public class DatabaseRecipe extends DatabaseTableDefinition{
     public static final String COL3 = "pictureURL";
     public static final String COL4 = "description";
 
+    public DatabaseRecipe(){}
     public DatabaseRecipe(SQLiteDatabase db){
-        super(db);
+        this.db = db;
     }
 
     @Override
