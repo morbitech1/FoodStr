@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -7,23 +8,40 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="4">
+        android:weightSum="5">
 
         <EditText
             android:id="@+id/filter"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:inputType="textPersonName"
-            android:hint="@string/filter_search" />
+            android:hint="@string/filter_search"
+            android:paddingEnd="20dp"/>
 
-        <EditText
-            android:id="@+id/person_count"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:inputType="numberSigned"
-            android:hint="@string/search_default_number_people"/>
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="2"
+                android:padding="3dp"
+                app:srcCompat="@drawable/person_icon" />
+
+            <EditText
+                android:id="@+id/person_count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:inputType="numberSigned" />
+        </LinearLayout>
+
 
     </LinearLayout>
 

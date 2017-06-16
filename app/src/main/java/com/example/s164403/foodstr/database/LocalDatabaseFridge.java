@@ -83,9 +83,10 @@ public class LocalDatabaseFridge extends DatabaseTableDefinition{
 
     public double getAmount(long id){
         Cursor cursor = db.rawQuery("SELECT * FROM " + NAME + " WHERE "+COL1 +"="+id,null);
-        double res = -1;
+        double res = 0;
         if(cursor.moveToFirst())
             res = cursor.getDouble(cursor.getColumnIndex(COL2));
+        cursor.close();
         return res;
     }
 

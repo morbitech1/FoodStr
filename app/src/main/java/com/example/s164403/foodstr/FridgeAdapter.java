@@ -73,10 +73,12 @@ public class FridgeAdapter extends BaseAdapter {
         final LinearLayout fragment = (LinearLayout) activity.getLayoutInflater().inflate(R.layout.fridge_fragment, null);
         TextView fridgeIngredient = (TextView) fragment.findViewById(R.id.fridge_ingredient);
         final EditText fridgeAmount = (EditText) fragment.findViewById(R.id.fridge_amount);
+        TextView fridgeUnit = (TextView)  fragment.findViewById(R.id.fridge_unit);
         fridgeAmount.setId((int)ingredient.id);
         ImageView fridgeButton = (ImageView) fragment.findViewById(R.id.fridge_remove);
         fridgeIngredient.setText(ingredient.name);
         fridgeAmount.setText(amount >= 0 ? ""+amount : "");
+        fridgeUnit.setText(ingredient.primaryUnit.toString());
         fridgeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

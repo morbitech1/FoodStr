@@ -1,6 +1,7 @@
 package com.example.s164403.foodstr;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -70,12 +72,21 @@ public class SearchResult extends Fragment implements OnSearchCompleted {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle bundle  = new Bundle();
+                //close keyboard
+                View v = getActivity().getCurrentFocus();
+                if (v != null) {
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
                 Recipe recipe = (Recipe) parent.getAdapter().getItem(position);
                 Log.d(TAG, "Showing view for " + recipe.name );
+                bundle.putLong("recipeId", recipe.id);
+                int numberOfPeople = Integer.parseInt(getResources().getString(R.string.search_default_number_people));
+                try{
+                    numberOfPeople = Integer.parseInt(numOfPeople.getText().toString());
+                }catch(Exception e){}
 
-                bundle.putString("recipeName", recipe.name);
-                bundle.putString("recipeDescription", recipe.description);
-                bundle.putString("recipeURL", recipe.pictureUrl);
+                bundle.putInt("peopleCount", numberOfPeople);
                 RecipeOverview recipeOverview = new RecipeOverview();
                 recipeOverview.setArguments(bundle);
                 getFragmentManager().beginTransaction().replace(R.id.main_view,recipeOverview ).addToBackStack(null).commit();

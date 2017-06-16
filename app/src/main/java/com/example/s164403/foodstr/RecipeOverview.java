@@ -26,6 +26,7 @@ public class RecipeOverview extends Fragment {
     WebView webView;
     ListView listView;
     Recipe recipe;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class RecipeOverview extends Fragment {
                                 "</body>" +
                                 "</html>";
         webView.loadDataWithBaseURL("", html, "text/html", "utf-8", "");
-        listView.setAdapter(new RecipeIngredientAdapter(getActivity(), recipe, db ,4));
+        listView.setAdapter(new RecipeIngredientAdapter(getActivity(), recipe, db ,getArguments().getInt("peopleCount")));
 
     }
 
