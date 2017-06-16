@@ -68,7 +68,8 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="47dp"
             android:scaleType="fitCenter"
-            app2:srcCompat="@drawable/handsymbol" /><![CDATA[
+            app2:srcCompat="@drawable/handsymbol" />
+        <![CDATA[
 
         />
 

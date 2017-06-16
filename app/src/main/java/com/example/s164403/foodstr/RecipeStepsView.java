@@ -49,7 +49,6 @@ public class RecipeStepsView extends View {
         super.onDraw(canvas);
         canvas.drawLine(0,1,getWidth(),1,PaintBrush);
 
-
     }
 
 }
