@@ -16,6 +16,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,12 +30,13 @@ import com.example.s164403.foodstr.database.MainDatabaseHelper;
 import com.example.s164403.foodstr.database.Model.Ingredient;
 import com.example.s164403.foodstr.database.Model.RecipeIngredientRelation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class Fridge extends Fragment {
 
-    public final static String TAG = "Fridge-Activity";
+    public final static String TAG = "Fridge-Fragment";
     public static MainDatabaseHelper databaseHelper;
     public static SQLiteDatabase db;
 
@@ -55,6 +57,7 @@ public class Fridge extends Fragment {
         super.onActivityCreated(savedInstanceState);
         initializeDatabase();
         initializeUiElements();
+
     }
 
 

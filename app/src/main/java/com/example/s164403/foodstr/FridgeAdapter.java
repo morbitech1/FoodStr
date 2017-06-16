@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -78,7 +79,7 @@ public class FridgeAdapter extends BaseAdapter {
         TextView fridgeIngredient = (TextView) fragment.findViewById(R.id.fridge_ingredient);
         final EditText fridgeAmount = (EditText) fragment.findViewById(R.id.fridge_amount);
         fridgeAmount.setId((int)ingredient.id);
-        ImageButton fridgeButton = (ImageButton) fragment.findViewById(R.id.fridge_remove);
+        ImageView fridgeButton = (ImageView) fragment.findViewById(R.id.fridge_remove);
         fridgeIngredient.setText(ingredient.name);
         fridgeAmount.setText(amount >= 0 ? ""+amount : "");
         fridgeButton.setOnClickListener(new View.OnClickListener() {

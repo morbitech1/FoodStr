@@ -18,8 +18,9 @@ public class DatabaseTask extends DatabaseTableDefinition {
     public static final String COL4 = "hot";
     public static final String COL5 = "hands";
 
+    public DatabaseTask(){}
     public DatabaseTask(SQLiteDatabase db){
-        super(db);
+        this.db = db;
     }
 
     @Override
