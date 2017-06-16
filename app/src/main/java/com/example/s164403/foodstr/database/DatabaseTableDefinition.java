@@ -8,11 +8,11 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public abstract class DatabaseTableDefinition {
-    final SQLiteDatabase db;
-    public DatabaseTableDefinition(SQLiteDatabase db){
+    SQLiteDatabase db;
+
+    public void setDatabase(SQLiteDatabase db){
         this.db = db;
     }
-
     abstract String getCreateQuery();
     abstract String getDropQuery();
 }

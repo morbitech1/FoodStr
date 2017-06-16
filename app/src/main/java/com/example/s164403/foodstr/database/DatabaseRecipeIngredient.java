@@ -17,8 +17,9 @@ public class DatabaseRecipeIngredient extends DatabaseTableDefinition{
     public static final String COL2 = "ingredient_id";
     public static final String COL3 = "factor";
 
-    public DatabaseRecipeIngredient(SQLiteDatabase db){
-        super(db);
+    public DatabaseRecipeIngredient(){}
+    public DatabaseRecipeIngredient(SQLiteDatabase db) {
+        this.db=db;
     }
 
     @Override

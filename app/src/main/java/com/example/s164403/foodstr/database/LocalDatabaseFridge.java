@@ -23,15 +23,16 @@ public class LocalDatabaseFridge extends DatabaseTableDefinition{
     private static final String COL1 = "ingredientId";
     private static final String COL2 = "amount";
 
+    public LocalDatabaseFridge(){}
     public LocalDatabaseFridge(SQLiteDatabase db){
-        super(db);
+        this.db = db;
     }
 
     @Override
     public String getCreateQuery() {
         return "CREATE TABLE "+ NAME +
                 "("+
-                COL1 + " PRIMARY KEY,"+
+                COL1 + " INTEGER PRIMARY KEY,"+
                 COL2 + " DECIMAL(10,2)"+
                 ")";
     }
@@ -88,7 +89,10 @@ public class LocalDatabaseFridge extends DatabaseTableDefinition{
         return res;
     }
 
-    public Map<Recipe, Double> searchRecipesByScore(int numOfPeople, int limit) {
+    public Map<Recipe, Double> searchRecipesByScore(int numOfPeople, int limit, String filter) {
+        if (filter == null) {
+            filter = "";
+        }
         Map<Recipe, Double> res = new LinkedHashMap<>();
         String query = " SELECT * FROM " +
                 "(" +
@@ -102,8 +106,9 @@ public class LocalDatabaseFridge extends DatabaseTableDefinition{
                 " LEFT OUTER JOIN "+ LocalDatabaseFridge.NAME +" on " + LocalDatabaseFridge.NAME + "." + LocalDatabaseFridge.COL1 + " = " + DatabaseRecipeIngredient.NAME + "." + DatabaseRecipeIngredient.COL2 +
                 ")" +
                 ")" +
-                "GROUP by " + DatabaseRecipeIngredient.COL1 + " ORDER BY RepScore DESC LIMIT " + limit +
-                ") JOIN " + DatabaseRecipe.NAME + " on "+ DatabaseRecipe.NAME +"."+ DatabaseRecipe.COL1 +" = " + DatabaseRecipeIngredient.COL1;
+                " GROUP by " + DatabaseRecipeIngredient.COL1 + " ORDER BY RepScore DESC LIMIT " + limit +
+                ") JOIN " + DatabaseRecipe.NAME + " on "+ DatabaseRecipe.NAME +"."+ DatabaseRecipe.COL1 +" = " + DatabaseRecipeIngredient.COL1 +
+                ("".equals(filter) ? "" : " WHERE " + DatabaseRecipe.NAME + "." + DatabaseRecipe.COL2 + " LIKE '%" + filter + "%'");
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             Log.i(Fridge.TAG, Arrays.deepToString(cursor.getColumnNames()));

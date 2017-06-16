@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView3"
+    <WebView
+        android:id="@+id/recipe_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim nibh quis mi sodales tincidunt. Fusce convallis, risus quis mattis commodo, elit augue fringilla elit, eget imperdiet dui mauris eu mauris. Nunc dui enim, molestie ac luctus ac, auctor et nulla. Pellentesque enim metus, iaculis eu nulla non, molestie tincidunt lacus. Sed placerat, sapien quis pulvinar pellentesque, nibh velit ultricies ex, non varius tortor felis eget eros. Suspendisse potenti. Phasellus eget lobortis libero. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Quisque molestie ex vitae egestas ultrices. Morbi est orci, tincidunt eu ultricies ac, commodo id dui. Suspendisse sed augue non ante dapibus pretium. Donec vehicula augue odio, non consequat velit consectetur consectetur. Sed laoreet lorem augue, sodales fermentum neque lobortis a. Vestibulum at dapibus neque. Vestibulum accumsan diam lorem, eget congue ante ullamcorper ut."
-
-        android:drawablePadding="3dp" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+</RelativeLayout>
