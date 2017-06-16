@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 
 public class Timeline {
-    //Recipe recipe;
+    Recipe recipe;
     private ArrayList<RecipeStep> steps = new ArrayList<RecipeStep>();
     private HashMap<Integer, StepAlarm> alarms;
 
@@ -32,9 +32,9 @@ public class Timeline {
     };
 
 
-    //public Timeline(Recipe recipe){
-        //this.recipe = recipe;
-    //}
+    public Timeline(Recipe recipe){
+        this.recipe = recipe;
+    }
     public Timeline(){}
 
     public void addStep(RecipeStep step){
@@ -53,11 +53,11 @@ public class Timeline {
         step.setStartTime(start);
         step.setLine(line);
 
-        if (alarms.get(start) == null){alarms.put(start, new StepAlarm(start));}
+        if (alarms.get(start) == null){alarms.put(start, new StepAlarm(start, recipe));}
         alarms.get(start).addEndingStep(step);
 
         int end = start + step.getTime();
-        if (alarms.get(end) == null){alarms.put(end, new StepAlarm(end));}
+        if (alarms.get(end) == null){alarms.put(end, new StepAlarm(end, recipe));}
         alarms.get(end).addStartingStep(step);
 
         if (end > finishtime) finishtime = end;
@@ -83,7 +83,7 @@ public class Timeline {
             }
         }
         //Sort the important chained steps so that they start with the shortest
-        prioritysteps.sort(sortByLowestTime);
+        //prioritysteps.sort(sortByLowestTime);
 
         //Set some sorting variables
         int nexthand[] = new int[getAvailableHands()];
@@ -108,7 +108,7 @@ public class Timeline {
         }
 
         //Sort the rest with highest first for a nice step-like formation
-        normalsteps.sort(sortByHighestTime);
+        //normalsteps.sort(sortByHighestTime);
 
         //The sorting of the rest doesn't matter;
         for (RecipeStep step : normalsteps){

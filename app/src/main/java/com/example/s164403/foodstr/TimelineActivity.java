@@ -1,8 +1,12 @@
 package com.example.s164403.foodstr;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.AlarmClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -62,14 +66,15 @@ public class TimelineActivity extends AppCompatActivity {
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int min = c.get(Calendar.MINUTE);
 
+            AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            long millis = SystemClock.elapsedRealtime();
+
             for (StepAlarm alarm : timeline.getAlarmTimes().values()){
                 //System.out.println(alarm.toString());
-                Log.i("FoodstrAlarm", alarm.toString());
-
-                Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
+                //Log.i("FoodstrAlarm", alarm.toString());
 
                 int time = (finishtime-alarm.getTime());
-                if (time <= 0) continue;
+                //if (time <= 0) continue;
 
                 int phour = time/60;
                 int pmin = time%60;
@@ -78,14 +83,41 @@ public class TimelineActivity extends AppCompatActivity {
                 int ahour = tmin < min ? 1 : 0;
                 int thour = (hour + phour + ahour)%24;
 
+                alarm.setParsedTime(thour, tmin);
 
+                /*Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
 
                 intent.putExtra(AlarmClock.EXTRA_HOUR, thour);
                 intent.putExtra(AlarmClock.EXTRA_MINUTES, tmin);
 
                 intent.putExtra(AlarmClock.EXTRA_MESSAGE, alarm.toString());
                 intent.putExtra(AlarmClock.EXTRA_SKIP_UI, true);
-                startActivityForResult(intent, alarm.getTime());
+                startActivityForResult(intent, alarm.getTime());*/
+
+                Intent intent = new Intent(AlarmNotificationReceiver.INTENT_BROADCAST);
+                intent.putExtra("recipe", "Noget mad");
+                intent.putExtra("start", alarm.getStartingString());
+                intent.putExtra("end", alarm.getEndingString());
+                intent.putExtra("hour", thour);
+                intent.putExtra("min", tmin);
+
+                String strtime = "";
+                strtime += (thour < 10 ? "0"+thour : thour);
+                strtime += ":"+(tmin < 10 ? "0"+tmin : tmin);
+
+                if (time <= 0){
+                    intent.putExtra("novibrate", true);
+                    sendBroadcast(intent);
+                    //Log.i("AlarmSent0", strtime);
+                }else {
+                    intent.putExtra("novibrate", true);
+                    PendingIntent pi = PendingIntent.getBroadcast(this, time, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    manager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, millis + time * 500, pi);
+                    //Log.i("AlarmSent", strtime);
+                }
+
+                //Log.i("Alarmtid", ""+millis + ", " + time + ", " + (millis+time) + ", "+ strtime);
+
             }
         }
     }
