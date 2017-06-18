@@ -19,6 +19,7 @@ public class RecipeStep {
     public RecipeStep(String name){
         setName(name);
     }
+    public RecipeStep(){};
 
     public void setName(String name) {this.name = name;}
     public String getName() {return name;}

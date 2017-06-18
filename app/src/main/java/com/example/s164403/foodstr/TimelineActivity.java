@@ -1,14 +1,26 @@
 package com.example.s164403.foodstr;
 
 import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -17,7 +29,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+    /*private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
@@ -33,26 +45,60 @@ public class TimelineActivity extends AppCompatActivity {
             return false;
         }
 
-    };
+    };*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
-        //mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        ImageButton alarms = (ImageButton) findViewById(R.id.button_alarms);
+        alarms.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)  {
+                setAlarms();
+            }
+        });
+
+        ImageButton newstep = (ImageButton) findViewById(R.id.step_add);
+        newstep.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)  {
+                editRecipeStep(null);
+            }
+        });
 
         loadTimeline(Timeline.getTestTimeline());
     }
 
     private Timeline timeline;
     private TimelineView mTimelineView;
+    private LinearLayout mStepListView;
+
     public void loadTimeline(Timeline timeline){
         this.timeline = timeline;
-        //mTimelineView = (TimelineView) findViewById(R.id.timeline);
-       // mTimelineView.loadTimeline(timeline);
+        mTimelineView = (TimelineView) findViewById(R.id.timeline);
+        mTimelineView.loadTimeline(timeline);
+
+        mStepListView = (LinearLayout) findViewById(R.id.step_list);
+        int finish = timeline.getFinishTime();
+        LayoutInflater layout = getLayoutInflater();
+        mStepListView.removeAllViews();
+
+        for (RecipeStep step : timeline.getSteps()){
+            View view = layout.inflate(R.layout.sample_recipe_steps_view, null);
+
+            TextView name = (TextView) view.findViewById(R.id.nametext);
+            name.setText(step.getName());
+            ((ImageView) view.findViewById(R.id.handsymbol)).setVisibility(step.getNeedsHand() ? View.VISIBLE : View.INVISIBLE);
+
+            int end = finish - step.getStartTime();
+            int start = end - step.getTime();
+            ((TextView) view.findViewById(R.id.timetext)).setText(""+start+" - " + end);
+
+            mStepListView.addView(view);
+        }
+
     }
 
     public void setAlarms(){
@@ -104,18 +150,54 @@ public class TimelineActivity extends AppCompatActivity {
                 if (time <= 0){
                     intent.putExtra("novibrate", true);
                     sendBroadcast(intent);
-                    //Log.i("AlarmSent0", strtime);
+                    Log.i("AlarmSent0", strtime);
                 }else {
                     intent.putExtra("novibrate", true);
                     PendingIntent pi = PendingIntent.getBroadcast(this, time, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     manager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, millis + time * 500, pi);
-                    //Log.i("AlarmSent", strtime);
+                    Log.i("AlarmSent", strtime);
                 }
 
-                //Log.i("Alarmtid", ""+millis + ", " + time + ", " + (millis+time) + ", "+ strtime);
+                Log.i("Alarmtid", ""+millis + ", " + time + ", " + (millis+time) + ", "+ strtime);
 
             }
         }
+    }
+
+    public void editRecipeStep(RecipeStep step){
+        if (timeline != null){
+            if (step == null){
+                step = new RecipeStep();
+                step.setName("");
+            }
+
+            final RecipeStep finalStep = step;
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            // Get the layout inflater
+            LayoutInflater inflater = getLayoutInflater();
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            builder.setView(inflater.inflate(R.layout.sample_recipe_step_context_view, null));
+            builder.setOnCancelListener(new DialogInterface.OnCancelListener(){
+                @Override
+                public void onCancel(DialogInterface face){
+                    updateStep(finalStep);
+                }
+            });
+            builder.setCancelable(true);
+            Dialog dialog = builder.create();
+            dialog.setCancelable(true);
+            dialog.setCanceledOnTouchOutside(true);
+            dialog.show();
+            FrameLayout frame = (FrameLayout)dialog.findViewById(R.id.edit_step_frame);
+            dialog.getWindow().setLayout(frame.getMeasuredWidth(), frame.getMeasuredHeight());
+        }
+    }
+
+    public void updateStep(RecipeStep step){
+
     }
 
 
