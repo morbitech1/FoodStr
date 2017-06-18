@@ -22,7 +22,32 @@
             app:srcCompat="@drawable/search_icon"
             android:id="@+id/button_search"
             android:layout_weight="1"
-            android:layout_margin="2dp" />
+            android:layout_margin="2dp"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/button_fridge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/fridge_icon"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/button_cook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/cooking_icon"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/button_accept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/accept_icon"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <FrameLayout

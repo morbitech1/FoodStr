@@ -14,7 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.s164403.foodstr.database.LocalDatabaseFridge;
@@ -40,6 +43,13 @@ public class SearchResult extends Fragment implements OnSearchCompleted {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.search_result, container, false);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ImageView fridge = (ImageView) getActivity().findViewById(R.id.button_fridge);
+        fridge.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -87,6 +97,7 @@ public class SearchResult extends Fragment implements OnSearchCompleted {
                 }catch(Exception e){}
 
                 bundle.putInt("peopleCount", numberOfPeople);
+                Log.d(TAG, "Making recipe fragment");
                 RecipeOverview recipeOverview = new RecipeOverview();
                 recipeOverview.setArguments(bundle);
                 getFragmentManager().beginTransaction().replace(R.id.main_view,recipeOverview ).addToBackStack(null).commit();
@@ -160,7 +171,15 @@ public class SearchResult extends Fragment implements OnSearchCompleted {
             return searchResult;
         }
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ImageView fridge = (ImageView) getActivity().findViewById(R.id.button_fridge);
+        fridge.setVisibility(View.GONE);
+    }
 }
+
 
 interface OnSearchCompleted{
     void onSearchCompleted(Map<Recipe, Double> searchRes);

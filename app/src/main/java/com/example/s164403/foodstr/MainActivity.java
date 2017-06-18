@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity{
     public final String TAG = "Main-Activity";
     FrameLayout mainView;
     LinearLayout menuBar;
-    ImageView search;
+    ImageView search, fridge, cook, accept;
     Fridge fridgeFragment = new Fridge();
     SearchResult searchResultFragment = new SearchResult();
 
@@ -31,6 +31,10 @@ public class MainActivity extends AppCompatActivity{
         mainView = (FrameLayout) findViewById(R.id.main_view);
         menuBar = (LinearLayout) findViewById(R.id.menu_bar);
         search = (ImageView) findViewById(R.id.button_search);
+        fridge = (ImageView) findViewById(R.id.button_fridge);
+        cook = (ImageView) findViewById(R.id.button_cook);
+        accept = (ImageView) findViewById(R.id.button_accept);
+
         if(savedInstanceState == null) {
             getFragmentManager().beginTransaction().replace(R.id.main_view, fridgeFragment).commit();
         }
@@ -42,6 +46,28 @@ public class MainActivity extends AppCompatActivity{
                         .replace(R.id.main_view, searchResultFragment)
                         .addToBackStack(null)
                         .commit();
+            }
+        });
+        fridge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Changing to fridge fragment");
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.main_view, fridgeFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+        cook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Changing to cook fragment");
+            }
+        });
+        accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Starting alarms");
             }
         });
 

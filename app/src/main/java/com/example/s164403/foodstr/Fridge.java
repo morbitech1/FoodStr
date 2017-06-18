@@ -2,6 +2,7 @@ package com.example.s164403.foodstr;
 
 import android.app.Fragment;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -13,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -40,6 +43,13 @@ public class Fridge extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fridge, container, false);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ImageView search = (ImageView) getActivity().findViewById(R.id.button_search);
+        search.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -130,5 +140,12 @@ public class Fridge extends Fragment {
         for(RecipeIngredientRelation ri : DummyData.dummyRI()){
             recipeIngredientDb.addRelation(ri);
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ImageView search = (ImageView) getActivity().findViewById(R.id.button_search);
+        search.setVisibility(View.GONE);
     }
 }

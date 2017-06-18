@@ -48,13 +48,13 @@ public class FridgeAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return keys.get(i).id;
     }
 
     public void add(Ingredient ingredient, double amount){
         Double currentAmount = data.get(ingredient);
         if(currentAmount != null )
-            amount += currentAmount;
+            amount += currentAmount >= 0 ? currentAmount : 0;
         data.put(ingredient,amount);
         keys = new ArrayList<>(data.keySet());
         notifyDataSetChanged();

@@ -71,7 +71,8 @@ public class LocalDatabaseFridge extends DatabaseTableDefinition{
         cv.put(COL2, amount);
         Cursor cursor = db.rawQuery("SELECT * FROM " + NAME + " WHERE " +COL1 + "="+id, null);
         if(cursor.moveToFirst()){
-            cv.put(COL2, amount + cursor.getDouble(cursor.getColumnIndex(COL2)));
+            double current = cursor.getDouble(cursor.getColumnIndex(COL2));
+            cv.put(COL2, amount + (current >= 0 ? current : 0));
             db.update(NAME, cv, COL1+ "="+id, null);
         }else {
             db.insert(NAME, null, cv);

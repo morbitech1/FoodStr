@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.s164403.foodstr.R;
@@ -24,6 +25,24 @@ public class RecipeOverview extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.recipe_overview, null);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ImageView fridge = (ImageView) getActivity().findViewById(R.id.button_fridge);
+        ImageView cook = (ImageView) getActivity().findViewById(R.id.button_cook);
+        fridge.setVisibility(View.VISIBLE);
+        cook.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ImageView fridge = (ImageView) getActivity().findViewById(R.id.button_fridge);
+        ImageView cook = (ImageView) getActivity().findViewById(R.id.button_cook);
+        fridge.setVisibility(View.GONE);
+        cook.setVisibility(View.GONE);
     }
 
     @Override
