@@ -1,9 +1,13 @@
 package com.example.s164403.foodstr;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.example.s164403.foodstr.database.DatabaseTask;
+import com.example.s164403.foodstr.database.MainDatabaseHelper;
 import com.example.s164403.foodstr.database.Model.Recipe;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -15,6 +19,7 @@ public class Timeline {
     Recipe recipe;
     private ArrayList<RecipeStep> steps = new ArrayList<RecipeStep>();
     private HashMap<Integer, StepAlarm> alarms;
+    private Context mContext;
 
     private int finishtime;
 
@@ -31,6 +36,11 @@ public class Timeline {
         }
     };
 
+
+    public Timeline(Recipe recipe, Context mContext) {
+        this.recipe = recipe;
+        this.mContext = mContext;
+    }
 
     public Timeline(Recipe recipe){
         this.recipe = recipe;
@@ -138,6 +148,18 @@ public class Timeline {
 
     public HashMap<Integer, StepAlarm> getAlarmTimes(){
         return alarms;
+    }
+
+    public void loadTimelineFromDatabase() {
+        MainDatabaseHelper dbh = new MainDatabaseHelper(mContext);
+        SQLiteDatabase db = dbh.getReadableDatabase();
+        DatabaseTask dt = new DatabaseTask(db);
+        if (recipe != null) {
+            for (RecipeStep step : dt.getStepsForRecipe(recipe.id)) {
+                addStep(step);
+            }
+        }
+        db.close();
     }
 
     public static Timeline getTestTimeline(){

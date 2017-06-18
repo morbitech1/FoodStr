@@ -73,6 +73,7 @@ public class DatabaseRecipeIngredient extends DatabaseTableDefinition{
                 ingredientDoubleMap.put(ingredientDB.getIngredient(ingredientId), factor);
             }while(cursor.moveToNext());
         }
+        cursor.close();
         return new RecipeIngredientRelation(recipe, ingredientDoubleMap);
     }
 

@@ -2,7 +2,6 @@ package com.example.s164403.foodstr;
 
 import android.app.Fragment;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -15,17 +14,18 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.s164403.foodstr.database.DatabaseIngredient;
 import com.example.s164403.foodstr.database.DatabaseRecipeIngredient;
+import com.example.s164403.foodstr.database.DatabaseTask;
 import com.example.s164403.foodstr.database.DummyData;
 import com.example.s164403.foodstr.database.LocalDatabaseFridge;
 import com.example.s164403.foodstr.database.MainDatabaseHelper;
 import com.example.s164403.foodstr.database.Model.Ingredient;
 import com.example.s164403.foodstr.database.Model.RecipeIngredientRelation;
+import com.example.s164403.foodstr.database.Model.Task;
 
 public class Fridge extends Fragment {
 
@@ -139,6 +139,10 @@ public class Fridge extends Fragment {
         DatabaseRecipeIngredient recipeIngredientDb = new DatabaseRecipeIngredient(db);
         for(RecipeIngredientRelation ri : DummyData.dummyRI()){
             recipeIngredientDb.addRelation(ri);
+        }
+        DatabaseTask dt = new DatabaseTask(db);
+        for (Task task : DummyData.dummyRecipeTasks()) {
+            dt.addTask(task);
         }
     }
 

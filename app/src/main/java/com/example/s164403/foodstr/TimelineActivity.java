@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -22,6 +23,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.example.s164403.foodstr.database.DatabaseRecipe;
+import com.example.s164403.foodstr.database.MainDatabaseHelper;
+import com.example.s164403.foodstr.database.Model.Recipe;
 
 import java.util.Calendar;
 
@@ -68,7 +73,15 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
 
-        loadTimeline(Timeline.getTestTimeline());
+        //loadTimeline(Timeline.getTestTimeline());
+        MainDatabaseHelper databaseHelper = new MainDatabaseHelper(this);
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        DatabaseRecipe databaseRecipe = new DatabaseRecipe(db);
+        Recipe recipe = databaseRecipe.getRecipe(1);
+        db.close();
+        Timeline timeline = new Timeline(recipe, this);
+        timeline.loadTimelineFromDatabase();
+        loadTimeline(timeline);
     }
 
     private Timeline timeline;

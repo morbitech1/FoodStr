@@ -14,16 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.s164403.foodstr.database.LocalDatabaseFridge;
 import com.example.s164403.foodstr.database.MainDatabaseHelper;
 import com.example.s164403.foodstr.database.Model.Recipe;
-import com.example.s164403.foodstr.database.RecipeOverview;
 
 import java.util.Map;
 
