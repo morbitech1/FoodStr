@@ -1,6 +1,6 @@
 package com.example.s164403.foodstr;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jonathan on 14-06-2017.
@@ -10,7 +10,7 @@ public class RecipeStep {
     private boolean hot;
     private int time = 10;
     private boolean hand;
-    private ArrayList<RecipeStep> prerequisites;
+    private List<RecipeStep> prerequisites;
     private String name = "";
 
     private int starttime;
@@ -20,8 +20,23 @@ public class RecipeStep {
         setName(name);
     }
 
+    public RecipeStep(boolean hot, int time, boolean hand, List<RecipeStep> prerequisites, String name) {
+        this.hot = hot;
+        this.time = time;
+        this.hand = hand;
+        this.name = name;
+        this.prerequisites = prerequisites;
+    }
+
     public void setName(String name) {this.name = name;}
     public String getName() {return name;}
+
+    public List<RecipeStep> getPrerequisites() {
+        return prerequisites;
+    }
+    public void setPrerequisites(List<RecipeStep> prerequisites) {
+        this.prerequisites = prerequisites;
+    }
 
     public void setHot(boolean hot){this.hot = hot;}
     public boolean getHot(){return hot;}

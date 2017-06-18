@@ -1,11 +1,11 @@
 package com.example.s164403.foodstr.database;
 
-import android.content.Context;
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.s164403.foodstr.R;
-import com.example.s164403.foodstr.database.Model.Task;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by s164403 on 6/14/2017.
@@ -34,6 +34,35 @@ public class DatabasePreRequisite   extends DatabaseTableDefinition{
                 COL2 + " INTEGER NOT NULL REFERENCES "+ DatabaseTask.NAME + "(" + DatabaseTask.COL1 + ")," +
                 "PRIMARY KEY (" + COL1 + ", " + COL2 + ")" +
                 ")";
+    }
+
+    public List<Long> getPreRequisiteIds(long taskId) {
+        List<Long> ids = new LinkedList<>();
+        String query = "SELECT " + COL1 +" FROM " + NAME
+                + " WHERE " + COL2 + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[] { Long.toString(taskId)});
+        if (cursor.moveToFirst()) {
+            do {
+                ids.add(cursor.getLong(0));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return ids;
+    }
+
+    public boolean setPreRequisites(long precedingTaskId, List<Long> preRequisites) {
+        boolean success = true;
+        for (long otherId : preRequisites) {
+            long id = 0;
+            if (otherId > 0 ) {
+                ContentValues cv = new ContentValues();
+                cv.put(COL1, otherId);
+                cv.put(COL2, precedingTaskId);
+                id = (int) db.insert(NAME, null, cv);
+                success &= id > 0;
+            }
+        }
+        return success;
     }
 
 }

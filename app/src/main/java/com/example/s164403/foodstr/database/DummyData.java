@@ -4,9 +4,12 @@ import com.example.s164403.foodstr.database.Model.Ingredient;
 import com.example.s164403.foodstr.database.Model.PrimaryUnit;
 import com.example.s164403.foodstr.database.Model.Recipe;
 import com.example.s164403.foodstr.database.Model.RecipeIngredientRelation;
+import com.example.s164403.foodstr.database.Model.Task;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -30,6 +33,28 @@ public class DummyData {
         res.add(new Ingredient("Sugar", PrimaryUnit.tsp));
 
         return res;
+    }
+
+    public static List<Task> dummyRecipeTasks() {
+        List<Task> dummyTasks = new LinkedList<>();
+
+        //public Task(long id,
+        //          long recipeId,
+        //          String name,
+        //          int duration,
+        //          boolean requireAttention,
+        //          boolean cariesOnHot,
+        //          List<Long> preRequisiteIds)
+
+        dummyTasks.add(new Task(0, 1, "Task 1", 20, true, true, new ArrayList<Long>()));
+        dummyTasks.add(new Task(0, 1, "Task 2", 50, true, true, new ArrayList<Long>()));
+        dummyTasks.add(new Task(0, 1, "Task 3", 10, true, false, new ArrayList<Long>()));
+        dummyTasks.add(new Task(0, 1, "Task 4", 7, true, false, new ArrayList<Long>()));
+        dummyTasks.add(new Task(0, 1, "Task 5, dependant on task 1 and task 2", 7, true, false, Arrays.asList((long)1,(long)2)));
+        dummyTasks.add(new Task(0, 1, "Task 6, dependant on task 3 and task 4", 7, true, false, Arrays.asList((long)3,(long)4)));
+
+
+        return dummyTasks;
     }
 
     public static List<RecipeIngredientRelation> dummyRI(){
@@ -79,6 +104,9 @@ public class DummyData {
         Ingredient bannanaShallot = new Ingredient("Banana Shallot", PrimaryUnit.amt);
         Ingredient sloeGin = new Ingredient("Sloe Gin", PrimaryUnit.ml);
         Ingredient blackberry = new Ingredient("Blackberries", PrimaryUnit.gram);
+
+        Ingredient sausages = new Ingredient("Sausages", PrimaryUnit.amt);
+        Ingredient noddles = new Ingredient("Noddles", PrimaryUnit.gram);
 
 
         //https://www.bbcgoodfood.com/recipes/classic-spaghetti-bolognese
@@ -154,11 +182,18 @@ public class DummyData {
         rackOfVensionIngredient.put(blackberry, 25.0);
         RecipeIngredientRelation ri4 = new RecipeIngredientRelation(rackOfVension, rackOfVensionIngredient);
 
+        Recipe noddlesAndSausages = new Recipe("Noddles with danish sausages", "https://www.maduniverset.dk/images/ABCD0003.JPG", "Easy to make. Just cock the noddles and fry the sausages. Then mix and eat with ketchup" );
+        HashMap<Ingredient, Double> noddlesAndSausagesIngredients = new HashMap<>();
+        noddlesAndSausagesIngredients.put(sausages, 2.0);
+        noddlesAndSausagesIngredients.put(noddles, 200.0);
+        RecipeIngredientRelation ri5 = new RecipeIngredientRelation(noddlesAndSausages, noddlesAndSausagesIngredients);
+
         List<RecipeIngredientRelation> ri = new ArrayList<>();
         ri.add(ri1);
         ri.add(ri2);
         ri.add(ri3);
         ri.add(ri4);
+        ri.add(ri5);
         return ri;
     }
 

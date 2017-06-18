@@ -91,7 +91,8 @@ public class LocalDatabaseFridge extends DatabaseTableDefinition{
         return res;
     }
 
-    public Map<Recipe, Double> searchRecipesByScore(int numOfPeople, int limit, String filter) {
+    public Map<Recipe, Double> searchRecipesByScore(int numOfPeopleInt, int limit, String filter) {
+        double numOfPeople = numOfPeopleInt;
         if (filter == null) {
             filter = "";
         }
@@ -107,7 +108,7 @@ public class LocalDatabaseFridge extends DatabaseTableDefinition{
                 "end as Score FROM (" +
                 " SELECT "+ DatabaseRecipeIngredient.NAME +"."+ DatabaseRecipeIngredient.COL1 +"," +
                 DatabaseRecipeIngredient.NAME +"."+ DatabaseRecipeIngredient.COL2 +"," +
-                " ifnull(100*("+ LocalDatabaseFridge.NAME + "." + LocalDatabaseFridge.COL2 +")/(" + DatabaseRecipeIngredient.NAME +"."+ DatabaseRecipeIngredient.COL3 + "*" + numOfPeople + "), 0) as Score" +
+                " ifnull(100.0*("+ LocalDatabaseFridge.NAME + "." + LocalDatabaseFridge.COL2 +")/(" + DatabaseRecipeIngredient.NAME +"."+ DatabaseRecipeIngredient.COL3 + "*" + numOfPeople + "), 0) as Score" +
                 " FROM " + DatabaseRecipeIngredient.NAME +
                 " LEFT OUTER JOIN "+ LocalDatabaseFridge.NAME +" on " + LocalDatabaseFridge.NAME + "." + LocalDatabaseFridge.COL1 + " = " + DatabaseRecipeIngredient.NAME + "." + DatabaseRecipeIngredient.COL2 +
                 ")" +
