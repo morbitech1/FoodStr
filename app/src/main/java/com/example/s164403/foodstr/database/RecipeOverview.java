@@ -83,7 +83,8 @@ public class RecipeOverview extends Fragment {
                                 "</html>";
         webView.loadDataWithBaseURL("", html, "text/html", "utf-8", "");
         int count = getArguments().getInt("peopleCount");
-        recipeIngredient.setAdapter(new RecipeIngredientAdapter(getActivity(), recipe, mainDB.getWritableDatabase(), count));
+        final RecipeIngredientAdapter ria = new RecipeIngredientAdapter(getActivity(), recipe, mainDB.getWritableDatabase(), count);
+        recipeIngredient.setAdapter(ria);
         final EditText peopleCount = (EditText) getActivity().findViewById(R.id.people_count);
         peopleCount.setText("" + count);
         peopleCount.addTextChangedListener(new TextWatcher() {
@@ -100,7 +101,7 @@ public class RecipeOverview extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    recipeIngredient.setAdapter(new RecipeIngredientAdapter(getActivity(), recipe, mainDB.getWritableDatabase(), Integer.parseInt(peopleCount.getText().toString())));
+                    ria.changeNumberOfPeople(Integer.parseInt(peopleCount.getText().toString()));
                 }catch (Exception e){
                     Log.d(TAG, "Unable to start adapter with given person count with error " + e.getMessage());
                 }

@@ -77,6 +77,11 @@ public class RecipeIngredientAdapter extends BaseAdapter{
         return result;
     }
 
+    public void changePeopleCount(int count){
+        this.people = count;
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public int getCount() {
