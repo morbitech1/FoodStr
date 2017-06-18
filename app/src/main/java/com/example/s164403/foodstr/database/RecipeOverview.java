@@ -3,10 +3,14 @@ package com.example.s164403.foodstr.database;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -19,6 +23,7 @@ import com.example.s164403.foodstr.database.Model.Recipe;
  */
 
 public class RecipeOverview extends Fragment {
+    public final static String TAG = "Recipe-Overview";
     WebView webView;
     ListView recipeIngredient;
     @Nullable
@@ -50,9 +55,9 @@ public class RecipeOverview extends Fragment {
         super.onActivityCreated(savedInstanceState);
         webView = (WebView) getActivity().findViewById(R.id.recipe_view);
         recipeIngredient = (ListView) getActivity().findViewById(R.id.recipe_ingredient);
-        MainDatabaseHelper mainDB = new MainDatabaseHelper(getActivity());
+        final MainDatabaseHelper mainDB = new MainDatabaseHelper(getActivity());
         DatabaseRecipe reipceDB = new DatabaseRecipe(mainDB.getWritableDatabase());
-        Recipe recipe = reipceDB.getRecipe(getArguments().getLong("recipeId"));
+        final Recipe recipe = reipceDB.getRecipe(getArguments().getLong("recipeId"));
         String html =
                         "<html>" +
                                 "<head>" +
@@ -77,7 +82,30 @@ public class RecipeOverview extends Fragment {
                                 "</body>" +
                                 "</html>";
         webView.loadDataWithBaseURL("", html, "text/html", "utf-8", "");
-        recipeIngredient.setAdapter(new RecipeIngredientAdapter(getActivity(), recipe, mainDB.getWritableDatabase(), getArguments().getInt("peopleCount")));
+        int count = getArguments().getInt("peopleCount");
+        recipeIngredient.setAdapter(new RecipeIngredientAdapter(getActivity(), recipe, mainDB.getWritableDatabase(), count));
+        final EditText peopleCount = (EditText) getActivity().findViewById(R.id.people_count);
+        peopleCount.setText("" + count);
+        peopleCount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try {
+                    recipeIngredient.setAdapter(new RecipeIngredientAdapter(getActivity(), recipe, mainDB.getWritableDatabase(), Integer.parseInt(peopleCount.getText().toString())));
+                }catch (Exception e){
+                    Log.d(TAG, "Unable to start adapter with given person count with error " + e.getMessage());
+                }
+            }
+        });
     }
 
 }
