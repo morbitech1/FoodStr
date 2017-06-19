@@ -45,13 +45,13 @@ public class DummyData {
         //          boolean requireAttention,
         //          boolean cariesOnHot,
         //          List<Long> preRequisiteIds)
-
-        dummyTasks.add(new Task(0, 1, "Task 1", 20, true, true, new ArrayList<Long>()));
-        dummyTasks.add(new Task(0, 1, "Task 2", 50, true, true, new ArrayList<Long>()));
-        dummyTasks.add(new Task(0, 1, "Task 3", 10, true, false, new ArrayList<Long>()));
-        dummyTasks.add(new Task(0, 1, "Task 4", 7, true, false, new ArrayList<Long>()));
-        dummyTasks.add(new Task(0, 1, "Task 5, dependant on task 1 and task 2", 7, true, false, Arrays.asList((long)1,(long)2)));
-        dummyTasks.add(new Task(0, 1, "Task 6, dependant on task 3 and task 4", 7, true, false, Arrays.asList((long)3,(long)4)));
+        dummyTasks.add(new Task(1, 1, "Prepare ingredients", 10, true, false, new ArrayList<Long>(),"Finely chop onion, carrots, and celery sticks. Chop the pancetta into cubes, and chop the chicken liver while removing fat and sinew."));
+        dummyTasks.add(new Task(2, 1, "Vegetables", 12, false, true, Arrays.asList((long)1),"Heat 1 1/2 tbsp oil in a large pan or flameproof casserole dish over a low-medium heat. Add the onion, celery and carrots with a pinch of salt. Cook for 10 mins, stirring occasionally, until softened but not coloured. Transfer to a plate using a slotted spoon."));
+        dummyTasks.add(new Task(3, 1, "Meat", 10, false, true, Arrays.asList((long)1),"Pour the remaining oil into the pan, increase the heat and tip in the pancetta. Cook for 3-4 mins until golden. Add the mince and chicken livers, and cook for a further 5 mins until browned, breaking down the mince with the back of a wooden spoon."));
+        dummyTasks.add(new Task(4, 1, "Bolognese", 10, false, true, Arrays.asList((long)2,(long)3), "Return the vegetables to the pan and add the bay leaf and tomato purée. Cook for a 1 min more and mix well. Pour in the wine and reduce by half. Add the stock and passata with some seasoning and bring to the boil. Reduce the heat to medium and let the sauce bubble away for 35-40 mins, stirring occasionally, until reduced by half and you are left with a thick ragu."));
+        dummyTasks.add(new Task(5, 1, "Spaghetti", 15, false, true, new ArrayList<Long>(), "Bring a large saucepan of salted water to the boil 15 mins before the sauce is ready. Drop in the pasta, cook following pack instructions until al dente, then drain."));
+        dummyTasks.add(new Task(6, 1, "Mix", 5, true, true, Arrays.asList((long)4,(long)5), "To finish the sauce, stir in the milk and season to taste. Tip the pasta onto a plate and top with the Bolognese. Serve with the Parmesan."));
+        dummyTasks.add(new Task(7, 2, "Prepare ingredients", 10, true, false, new ArrayList<Long>(), "Chop onion, separate the garlic into cloves, chop sweet potatoes, parsnips and carrots into chunks"));
 
 
         return dummyTasks;
@@ -77,7 +77,6 @@ public class DummyData {
         Ingredient chicken = new Ingredient("Free-Range Chicken", PrimaryUnit.gram);
         Ingredient oliveOil = new Ingredient("Olive Oil", PrimaryUnit.tbsp);
         Ingredient rosemarySprings = new Ingredient("rosemarySprings", PrimaryUnit.pack);
-        Ingredient parsn = new Ingredient("oil", PrimaryUnit.tbsp);
         Ingredient parsnip = new Ingredient("parsnip", PrimaryUnit.amt);
         Ingredient sweetPotato = new Ingredient("Sweet Potato", PrimaryUnit.amt);
         Ingredient plainFlour = new Ingredient("Plain Flour", PrimaryUnit.gram);
@@ -106,7 +105,7 @@ public class DummyData {
         Ingredient blackberry = new Ingredient("Blackberries", PrimaryUnit.gram);
 
         Ingredient sausages = new Ingredient("Sausages", PrimaryUnit.amt);
-        Ingredient noddles = new Ingredient("Noddles", PrimaryUnit.gram);
+        Ingredient ketchup = new Ingredient("Ketchup", PrimaryUnit.ml);
 
 
         //https://www.bbcgoodfood.com/recipes/classic-spaghetti-bolognese
@@ -185,7 +184,8 @@ public class DummyData {
         Recipe noddlesAndSausages = new Recipe("Noddles with danish sausages", "https://www.maduniverset.dk/images/ABCD0003.JPG", "Easy to make. Just cock the noddles and fry the sausages. Then mix and eat with ketchup" );
         HashMap<Ingredient, Double> noddlesAndSausagesIngredients = new HashMap<>();
         noddlesAndSausagesIngredients.put(sausages, 2.0);
-        noddlesAndSausagesIngredients.put(noddles, 200.0);
+        noddlesAndSausagesIngredients.put(spaghetti, 200.0);
+        noddlesAndSausagesIngredients.put(ketchup, 10.0);
         RecipeIngredientRelation ri5 = new RecipeIngredientRelation(noddlesAndSausages, noddlesAndSausagesIngredients);
 
         List<RecipeIngredientRelation> ri = new ArrayList<>();
@@ -195,6 +195,8 @@ public class DummyData {
         ri.add(ri4);
         ri.add(ri5);
         return ri;
+
     }
+
 
 }

@@ -70,7 +70,7 @@ public class FridgeAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         final Ingredient ingredient = keys.get(i);
         double amount = data.get(ingredient);
-        final LinearLayout fragment = (LinearLayout) activity.getLayoutInflater().inflate(R.layout.fridge_fragment, null);
+        final LinearLayout fragment = (LinearLayout) activity.getLayoutInflater().inflate(R.layout.fridge_list_element, null);
         TextView fridgeIngredient = (TextView) fragment.findViewById(R.id.fridge_ingredient);
         final EditText fridgeAmount = (EditText) fragment.findViewById(R.id.fridge_amount);
         TextView fridgeUnit = (TextView)  fragment.findViewById(R.id.fridge_unit);

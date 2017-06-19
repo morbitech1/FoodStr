@@ -226,4 +226,19 @@ public class Timeline {
         }
     }
 
+    public void sort2(){
+
+        ArrayList<ArrayList<RecipeStep>> steps2 = new ArrayList<ArrayList<RecipeStep>>();
+
+        for(RecipeStep step : steps){
+            int[] position= bestPosition(step);
+        }
+
+
+    }
+
+    public int[] bestPosition(RecipeStep step){
+
+        return null;
+    }
 }

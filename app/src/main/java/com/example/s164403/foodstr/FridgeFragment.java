@@ -27,9 +27,9 @@ import com.example.s164403.foodstr.database.Model.Ingredient;
 import com.example.s164403.foodstr.database.Model.RecipeIngredientRelation;
 import com.example.s164403.foodstr.database.Model.Task;
 
-public class Fridge extends Fragment {
+public class FridgeFragment extends Fragment {
 
-    public final static String TAG = "Fridge-Fragment";
+    public final static String TAG = "FridgeFragment-Fragment";
     public static MainDatabaseHelper databaseHelper;
     public static SQLiteDatabase db;
 
@@ -117,7 +117,7 @@ public class Fridge extends Fragment {
                     double amount;
                     //Try to get amount from text field, defaults to -1 for no amount given
                     try{
-                        amount = Double.parseDouble(Fridge.this.amount.getText().toString());
+                        amount = Double.parseDouble(FridgeFragment.this.amount.getText().toString());
                     }catch(Exception e){
                         amount = -1;
                     }
@@ -126,7 +126,7 @@ public class Fridge extends Fragment {
                     fridgeAdapter.add(ingredient,amount);
                     //Reset add ingredient text
                     ingredientTextview.setText("");
-                    Fridge.this.amount.setText("");
+                    FridgeFragment.this.amount.setText("");
                 }else{
                     //Let user know the ingredient does not exist
                     Toast.makeText(getActivity(), ingredientTextview.getText().toString() + " does not exists", Toast.LENGTH_LONG).show();

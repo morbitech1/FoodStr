@@ -18,7 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.example.s164403.foodstr.database.LocalDatabaseFridge;
+import com.example.s164403.foodstr.database.DatabaseRecipeIngredient;
 import com.example.s164403.foodstr.database.MainDatabaseHelper;
 import com.example.s164403.foodstr.database.Model.Recipe;
 
@@ -28,7 +28,7 @@ import java.util.Map;
  * Created by Morbi95 on 15-Jun-17.
  */
 
-public class SearchResult extends Fragment implements OnSearchCompleted {
+public class SearchResultFragment extends Fragment implements OnSearchCompleted {
     EditText filter, numOfPeople;
     ListView recipes;
     SQLiteDatabase db;
@@ -47,6 +47,13 @@ public class SearchResult extends Fragment implements OnSearchCompleted {
         super.onStart();
         ImageView fridge = (ImageView) getActivity().findViewById(R.id.button_fridge);
         fridge.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(db != null)
+            db.close();
     }
 
     @Override
@@ -95,7 +102,7 @@ public class SearchResult extends Fragment implements OnSearchCompleted {
 
                 bundle.putInt("peopleCount", numberOfPeople);
                 Log.d(TAG, "Making recipe fragment");
-                RecipeOverview recipeOverview = new RecipeOverview();
+                RecipeOverviewFragment recipeOverview = new RecipeOverviewFragment();
                 recipeOverview.setArguments(bundle);
                 getFragmentManager().beginTransaction().replace(R.id.main_view,recipeOverview ).addToBackStack(null).commit();
             }
@@ -125,7 +132,7 @@ public class SearchResult extends Fragment implements OnSearchCompleted {
         currentSearchInDatabaseTask = new SearchInDatabaseTask(this);
 
         SearchQuery query = new SearchQuery();
-        query.databaseFridge = new LocalDatabaseFridge(db);
+        query.databaseRecipeIngredient = new DatabaseRecipeIngredient(db);
         try {
             query.numOfPeople = Integer.parseInt(numOfPeople.getText().toString());
         } catch (NumberFormatException ex) {
@@ -141,7 +148,7 @@ public class SearchResult extends Fragment implements OnSearchCompleted {
         String filter;
         int numOfPeople;
         int limit;
-        LocalDatabaseFridge databaseFridge;
+        DatabaseRecipeIngredient databaseRecipeIngredient;
     }
 
 
@@ -162,7 +169,7 @@ public class SearchResult extends Fragment implements OnSearchCompleted {
             Map<Recipe, Double> searchResult = null;
             if (params.length >= 1) {
                 SearchQuery query = params[0];
-                searchResult = query.databaseFridge.searchRecipesByScore(
+                searchResult = query.databaseRecipeIngredient.searchRecipesByScore(
                         query.numOfPeople, query.limit, query.filter);
             }
             return searchResult;

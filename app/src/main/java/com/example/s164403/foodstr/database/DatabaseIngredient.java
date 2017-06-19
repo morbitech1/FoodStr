@@ -1,15 +1,10 @@
 package com.example.s164403.foodstr.database;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
-import com.example.s164403.foodstr.R;
 import com.example.s164403.foodstr.database.Model.Ingredient;
-import com.example.s164403.foodstr.database.Model.PrimaryUnit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +20,6 @@ public class DatabaseIngredient extends DatabaseTableDefinition {
     public static final String COL3 = "alias";
     // Maps to enum
     public static final String COL4 = "primaryUnit";
-    private static DatabaseIngredient instance;
 
     public DatabaseIngredient(){}
     public DatabaseIngredient(SQLiteDatabase db){

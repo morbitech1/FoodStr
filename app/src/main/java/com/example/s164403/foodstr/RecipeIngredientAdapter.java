@@ -18,7 +18,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -107,7 +106,7 @@ public class RecipeIngredientAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         if(view == null)
-            view = activity.getLayoutInflater().inflate(R.layout.recipe_ingredient_fragment, null);
+            view = activity.getLayoutInflater().inflate(R.layout.recipe_overview_list_element, null);
         LocalDatabaseFridge fridgeDb = new LocalDatabaseFridge(db);
         Ingredient ingredient = keys.get(position);
         Double factor =  recipeIngredientRelation.ingredients.get(ingredient) * people;

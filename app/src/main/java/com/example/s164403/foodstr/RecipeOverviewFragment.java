@@ -1,6 +1,7 @@
 package com.example.s164403.foodstr;
 
 import android.app.Fragment;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -22,10 +23,11 @@ import com.example.s164403.foodstr.database.Model.Recipe;
  * Created by s164403 on 6/16/2017.
  */
 
-public class RecipeOverview extends Fragment {
+public class RecipeOverviewFragment extends Fragment {
     public final static String TAG = "Recipe-Overview";
     WebView webView;
     ListView recipeIngredient;
+    private SQLiteDatabase db;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -51,12 +53,20 @@ public class RecipeOverview extends Fragment {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(db != null)
+            db.close();
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         webView = (WebView) getActivity().findViewById(R.id.recipe_view);
         recipeIngredient = (ListView) getActivity().findViewById(R.id.recipe_ingredient);
         final MainDatabaseHelper mainDB = new MainDatabaseHelper(getActivity());
-        DatabaseRecipe reipceDB = new DatabaseRecipe(mainDB.getWritableDatabase());
+        db = mainDB.getWritableDatabase();
+        DatabaseRecipe reipceDB = new DatabaseRecipe(db);
         final Recipe recipe = reipceDB.getRecipe(getArguments().getLong("recipeId"));
         String html =
                 "<html>" +
@@ -84,7 +94,7 @@ public class RecipeOverview extends Fragment {
                         "</html>";
         webView.loadDataWithBaseURL("", html, "text/html", "utf-8", "");
         int count = getArguments().getInt("peopleCount");
-        final RecipeIngredientAdapter ria = new RecipeIngredientAdapter(getActivity(), recipe, mainDB.getWritableDatabase(), count);
+        final RecipeIngredientAdapter ria = new RecipeIngredientAdapter(getActivity(), recipe, db, count);
         recipeIngredient.setAdapter(ria);
         final EditText peopleCount = (EditText) getActivity().findViewById(R.id.people_count);
         peopleCount.setText("" + count);
