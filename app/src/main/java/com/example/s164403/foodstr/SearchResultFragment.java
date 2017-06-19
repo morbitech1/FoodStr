@@ -18,7 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.example.s164403.foodstr.database.LocalDatabaseFridge;
+import com.example.s164403.foodstr.database.DatabaseRecipeIngredient;
 import com.example.s164403.foodstr.database.MainDatabaseHelper;
 import com.example.s164403.foodstr.database.Model.Recipe;
 
@@ -132,7 +132,7 @@ public class SearchResultFragment extends Fragment implements OnSearchCompleted 
         currentSearchInDatabaseTask = new SearchInDatabaseTask(this);
 
         SearchQuery query = new SearchQuery();
-        query.databaseFridge = new LocalDatabaseFridge(db);
+        query.databaseRecipeIngredient = new DatabaseRecipeIngredient(db);
         try {
             query.numOfPeople = Integer.parseInt(numOfPeople.getText().toString());
         } catch (NumberFormatException ex) {
@@ -148,7 +148,7 @@ public class SearchResultFragment extends Fragment implements OnSearchCompleted 
         String filter;
         int numOfPeople;
         int limit;
-        LocalDatabaseFridge databaseFridge;
+        DatabaseRecipeIngredient databaseRecipeIngredient;
     }
 
 
@@ -169,7 +169,7 @@ public class SearchResultFragment extends Fragment implements OnSearchCompleted 
             Map<Recipe, Double> searchResult = null;
             if (params.length >= 1) {
                 SearchQuery query = params[0];
-                searchResult = query.databaseFridge.searchRecipesByScore(
+                searchResult = query.databaseRecipeIngredient.searchRecipesByScore(
                         query.numOfPeople, query.limit, query.filter);
             }
             return searchResult;
