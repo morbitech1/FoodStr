@@ -25,7 +25,6 @@ public class DatabaseIngredient extends DatabaseTableDefinition {
     public static final String COL3 = "alias";
     // Maps to enum
     public static final String COL4 = "primaryUnit";
-    private static DatabaseIngredient instance;
 
     public DatabaseIngredient(){}
     public DatabaseIngredient(SQLiteDatabase db){

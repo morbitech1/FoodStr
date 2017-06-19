@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -15,7 +14,6 @@ import com.example.s164403.foodstr.database.Model.Recipe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.Inflater;
 
 /**
  * Created by Morbi95 on 15-Jun-17.
@@ -54,7 +52,7 @@ public class SearchResultAdapter extends BaseAdapter{
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v = view;
         if (v == null)
-            v = activity.getLayoutInflater().inflate(R.layout.recipe_fragment, null);
+            v = activity.getLayoutInflater().inflate(R.layout.search_result_list_element, null);
 
         Recipe recipe = keys.get(i);
         double score = data.get(recipe);

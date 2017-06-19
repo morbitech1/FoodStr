@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.example.s164403.foodstr.Fridge;
+import com.example.s164403.foodstr.FridgeFragment;
 import com.example.s164403.foodstr.database.Model.Ingredient;
 import com.example.s164403.foodstr.database.Model.Recipe;
 
@@ -118,7 +118,7 @@ public class LocalDatabaseFridge extends DatabaseTableDefinition{
                 ("".equals(filter) ? "" : " WHERE " + DatabaseRecipe.NAME + "." + DatabaseRecipe.COL2 + " LIKE '%" + filter + "%'");
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
-            Log.i(Fridge.TAG, Arrays.deepToString(cursor.getColumnNames()));
+            Log.i(FridgeFragment.TAG, Arrays.deepToString(cursor.getColumnNames()));
             do {
                 Recipe recipe = new Recipe(cursor);
                 res.put(recipe, cursor.getDouble(cursor.getColumnIndex("RepScore")));

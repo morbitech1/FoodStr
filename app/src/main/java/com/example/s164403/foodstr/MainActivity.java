@@ -1,14 +1,10 @@
 package com.example.s164403.foodstr;
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -21,8 +17,8 @@ public class MainActivity extends AppCompatActivity{
     FrameLayout mainView;
     LinearLayout menuBar;
     ImageView search, fridge, cook, accept;
-    Fridge fridgeFragment = new Fridge();
-    SearchResult searchResultFragment = new SearchResult();
+    FridgeFragment fridgeFragment = new FridgeFragment();
+    SearchResultFragment searchResultFragment = new SearchResultFragment();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,6 +34,7 @@ public class MainActivity extends AppCompatActivity{
         if(savedInstanceState == null) {
             getFragmentManager().beginTransaction().replace(R.id.main_view, fridgeFragment).commit();
         }
+
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
