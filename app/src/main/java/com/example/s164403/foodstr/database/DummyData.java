@@ -78,7 +78,6 @@ public class DummyData {
         Ingredient chicken = new Ingredient("Free-Range Chicken", PrimaryUnit.gram);
         Ingredient oliveOil = new Ingredient("Olive Oil", PrimaryUnit.tbsp);
         Ingredient rosemarySprings = new Ingredient("rosemarySprings", PrimaryUnit.pack);
-        Ingredient parsn = new Ingredient("oil", PrimaryUnit.tbsp);
         Ingredient parsnip = new Ingredient("parsnip", PrimaryUnit.amt);
         Ingredient sweetPotato = new Ingredient("Sweet Potato", PrimaryUnit.amt);
         Ingredient plainFlour = new Ingredient("Plain Flour", PrimaryUnit.gram);
@@ -107,7 +106,7 @@ public class DummyData {
         Ingredient blackberry = new Ingredient("Blackberries", PrimaryUnit.gram);
 
         Ingredient sausages = new Ingredient("Sausages", PrimaryUnit.amt);
-        Ingredient noddles = new Ingredient("Noddles", PrimaryUnit.gram);
+        Ingredient ketchup = new Ingredient("Ketchup", PrimaryUnit.ml);
 
 
         //https://www.bbcgoodfood.com/recipes/classic-spaghetti-bolognese
@@ -186,7 +185,8 @@ public class DummyData {
         Recipe noddlesAndSausages = new Recipe("Noddles with danish sausages", "https://www.maduniverset.dk/images/ABCD0003.JPG", "Easy to make. Just cock the noddles and fry the sausages. Then mix and eat with ketchup" );
         HashMap<Ingredient, Double> noddlesAndSausagesIngredients = new HashMap<>();
         noddlesAndSausagesIngredients.put(sausages, 2.0);
-        noddlesAndSausagesIngredients.put(noddles, 200.0);
+        noddlesAndSausagesIngredients.put(spaghetti, 200.0);
+        noddlesAndSausagesIngredients.put(ketchup, 10.0);
         RecipeIngredientRelation ri5 = new RecipeIngredientRelation(noddlesAndSausages, noddlesAndSausagesIngredients);
 
         List<RecipeIngredientRelation> ri = new ArrayList<>();

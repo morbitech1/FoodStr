@@ -9,6 +9,7 @@ import com.example.s164403.foodstr.database.Model.Recipe;
 import com.example.s164403.foodstr.database.Model.RecipeIngredientRelation;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -59,6 +60,47 @@ public class DatabaseRecipeIngredient extends DatabaseTableDefinition{
                 db.insert(NAME, null, cv);
             }
         }
+    }
+
+    public Map<Recipe, Double> searchRecipesByScore(int numOfPeopleInt, int limit, String filter) {
+        final String finalColName = "RepScore";
+        Double numOfPeople = (double)numOfPeopleInt;
+        if (filter == null) {
+            filter = "";
+        }
+        boolean filtered = !"".equals(filter);
+        Map<Recipe, Double> res = new LinkedHashMap<>();
+        String query = " SELECT * FROM " +
+                "(" +
+                " SELECT "+ DatabaseRecipeIngredient.COL1 +", AVG(Score) as " + finalColName + " FROM" +
+                "(" +
+                " SELECT " + DatabaseRecipeIngredient.COL1 + ", case " +
+                "when Score > 100 then 100 " +
+                "when Score < 0 then 100 " +
+                "else Score " +
+                "end as Score FROM (" +
+                " SELECT "+ DatabaseRecipeIngredient.NAME +"."+ DatabaseRecipeIngredient.COL1 +"," +
+                DatabaseRecipeIngredient.NAME +"."+ DatabaseRecipeIngredient.COL2 +"," +
+                " ifnull(100.0*("+ LocalDatabaseFridge.NAME + "." + LocalDatabaseFridge.COL2 +")/(" + DatabaseRecipeIngredient.NAME +"."+ DatabaseRecipeIngredient.COL3 + "*?), 0) as Score" +
+                " FROM " + DatabaseRecipeIngredient.NAME +
+                " LEFT OUTER JOIN "+ LocalDatabaseFridge.NAME +" on " + LocalDatabaseFridge.NAME + "." + LocalDatabaseFridge.COL1 + " = " + DatabaseRecipeIngredient.NAME + "." + DatabaseRecipeIngredient.COL2 +
+                ")" +
+                ")" +
+                " GROUP by " + DatabaseRecipeIngredient.COL1 + " ORDER BY " + finalColName + " DESC LIMIT ?" +
+                ") JOIN " + DatabaseRecipe.NAME + " on "+ DatabaseRecipe.NAME +"."+ DatabaseRecipe.COL1 +" = " + DatabaseRecipeIngredient.COL1 +
+                (filtered ? " WHERE " + DatabaseRecipe.NAME + "." + DatabaseRecipe.COL2 + " LIKE ?" : "");
+
+        String[] params = filtered ? new String[] {numOfPeople.toString(), Integer.toString(limit), "%" + filter + "%" } : new String[] {numOfPeople.toString(), Integer.toString(limit) } ;
+
+        Cursor cursor = db.rawQuery(query, params);
+        if (cursor.moveToFirst()) {
+            do {
+                Recipe recipe = new Recipe(cursor);
+                res.put(recipe, cursor.getDouble(cursor.getColumnIndex(finalColName)));
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+        return res;
     }
 
     public RecipeIngredientRelation getRecipeIngredientRelation(long recipeId){
