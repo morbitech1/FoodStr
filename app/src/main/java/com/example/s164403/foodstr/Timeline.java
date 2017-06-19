@@ -227,17 +227,59 @@ public class Timeline {
     public void sort2(){
 
         ArrayList<ArrayList<RecipeStep>> steps2 = new ArrayList<ArrayList<RecipeStep>>();
-
+        //TODO: tag alle predecessors først
         for(RecipeStep step : steps){
-            int[] position= bestPosition(step);
-            steps.insert
+            int[] position = new int[2];
+            int heatloss = Integer.MAX_VALUE;
+            int linenumber = 0;
+            int starttid = 0;
+            ArrayList<Integer> indexes = new ArrayList<Integer>();
+
+            for(ArrayList<RecipeStep> line : steps2){
+                for (int i = 0; i<line.size();i++){
+                    if(line.get(i).isPredecessor){
+                        for (int k = i; i >= 0; i--) {
+                            if( starttid<line.get(i).getTime()) {
+                                starttid=line.get(i).getTime();
+                            }
+                        }
+                    }
+                }
+            }
+
+            int time=0;
+            for(ArrayList<RecipeStep> line : steps2) {
+                int i;
+                for (i=0; i<line.size();i++) {
+                    time+=line.get(i).getTime();
+                    if (time>=starttid) break;
+                }
+                indexes.add(i);
+            }
+
+            for(ArrayList<RecipeStep> line : steps2){
+                int index;
+                for(index = indexes.get(linenumber); index<line.size(); index++){
+                    int warm=0;
+                    int timebefore=0;
+                    if(step.getHot()){
+                        for(int i = index; i>=0;i--) {
+                            timebefore += line.get(i).getTime();
+                        }
+                    }
+                    warm=warm*step.getTime()+timebefore;
+                    if(heatloss>warm) {
+                        heatloss = warm;
+                        position[0] = linenumber;
+                        position[1] = index;
+                    }
+                }
+                linenumber++;
+            }
+
+            steps2.get(position[0]).add(position[1], step);
         }
 
-
     }
 
-    public int[] bestPosition(RecipeStep step){
-
-
-    }
 }
