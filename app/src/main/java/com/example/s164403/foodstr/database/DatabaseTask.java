@@ -26,6 +26,7 @@ public class DatabaseTask extends DatabaseTableDefinition {
     public static final String COL4 = "name";
     public static final String COL5 = "hot";
     public static final String COL6 = "hands";
+    public static final String COL7 = "description";
 
     public DatabaseTask(){}
     public DatabaseTask(SQLiteDatabase db){
@@ -40,7 +41,8 @@ public class DatabaseTask extends DatabaseTableDefinition {
                 COL3 + " INTEGER," +
                 COL4 + " TEXT," +
                 COL5 + " BOOLEAN," +
-                COL6 + " BOOLEAN)";
+                COL6 + " BOOLEAN, " +
+                COL7 + " TEXT)";
     }
 
     private Task fromCursor(Cursor cursor) {
@@ -50,7 +52,8 @@ public class DatabaseTask extends DatabaseTableDefinition {
         String name = cursor.getString(cursor.getColumnIndex(COL4));
         boolean hands = cursor.getInt(cursor.getColumnIndex(COL5)) != 0;
         boolean hot = cursor.getInt(cursor.getColumnIndex(COL6)) != 0;
-        return new Task(id, recipeId, name, hands, hot, duration, db);
+        String description = cursor.getString(cursor.getColumnIndex(COL7));
+        return new Task(id, recipeId, name,duration, hands, hot,description, db);
     }
 
     public boolean addTask(Task taskToAdd) {
@@ -62,6 +65,7 @@ public class DatabaseTask extends DatabaseTableDefinition {
             cv.put(COL4, taskToAdd.name);
             cv.put(COL5, taskToAdd.cariesOnHot);
             cv.put(COL6, taskToAdd.requireAttention);
+            cv.put(COL7, taskToAdd.description);
             id = (int) db.insert(NAME, null, cv);
         }
         DatabasePreRequisite dpr = new DatabasePreRequisite(db);
