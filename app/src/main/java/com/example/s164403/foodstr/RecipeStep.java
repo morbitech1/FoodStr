@@ -1,7 +1,5 @@
 package com.example.s164403.foodstr;
 
-import com.example.s164403.foodstr.database.Model.Recipe;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +47,7 @@ public class RecipeStep {
     public List<RecipeStep> getPrerequisites() {
         return prerequisites;
     }
+
     public void addPrerequisite(RecipeStep prerequisite) {
         prerequisites.add(prerequisite);
         prerequisite.addPredecessor(this);
@@ -59,6 +58,9 @@ public class RecipeStep {
     }
 
     public void clearPreRequisites(){
+        for (RecipeStep step : prerequisites) {
+            step.predecessors.remove(this);
+        }
         prerequisites.clear();
     }
 
