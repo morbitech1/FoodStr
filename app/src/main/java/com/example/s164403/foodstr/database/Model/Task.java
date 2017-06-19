@@ -8,6 +8,7 @@ import com.example.s164403.foodstr.database.DatabaseRecipe;
 import com.example.s164403.foodstr.database.DatabaseTask;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -70,14 +71,15 @@ public class Task {
         this.db = db;
     }
 
-    public RecipeStep getRecipeStep(Map<Long, RecipeStep> cacheMap) {
+    public RecipeStep getRecipeStep(Map<Long, RecipeStep> cacheMap, HashSet<RecipeStep> seenBefore) {
         List<Task> preRequisite = getPreRequisites();
         List<RecipeStep> preRequisiteSteps = new LinkedList<>();
         RecipeStep res = cacheMap.get(id);
         for (Task task : preRequisite) {
             RecipeStep step = cacheMap.get(task.id);
-            if (step == null) {
-                step = task.getRecipeStep(cacheMap);
+            if (step == null && seenBefore.contains(res)) {
+                seenBefore.add(res);
+                step = task.getRecipeStep(cacheMap, seenBefore);
                 cacheMap.put(task.id, step);
             }
             preRequisiteSteps.add(step);
@@ -94,12 +96,13 @@ public class Task {
         return res;
     }
 
+
     public long getRecipeId() {
         return recipeId;
     }
 
     public RecipeStep getRecipeStep() {
-        return getRecipeStep(new HashMap<Long, RecipeStep>());
+        return getRecipeStep(new HashMap<Long, RecipeStep>(), new HashSet<RecipeStep>());
     }
 
 

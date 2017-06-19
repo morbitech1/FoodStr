@@ -10,6 +10,7 @@ import com.example.s164403.foodstr.database.Model.Task;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +78,7 @@ public class DatabaseTask extends DatabaseTableDefinition {
         List<RecipeStep> steps = new LinkedList<>();
         List<Task> tasks = getTasksForRecipe(recipeId);
         for (Task task : tasks) {
-            steps.add(task.getRecipeStep(idStepMap));
+            steps.add(task.getRecipeStep(idStepMap, new HashSet<RecipeStep>()));
         }
         return steps;
     }
