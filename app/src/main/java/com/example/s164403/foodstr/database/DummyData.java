@@ -46,10 +46,10 @@ public class DummyData {
         //          boolean cariesOnHot,
         //          List<Long> preRequisiteIds)
 
-        dummyTasks.add(new Task(0, 1, "Task 1", 20, true, true, new ArrayList<Long>()));
-        dummyTasks.add(new Task(0, 1, "Task 2", 50, true, true, new ArrayList<Long>()));
-        dummyTasks.add(new Task(0, 1, "Task 3", 10, true, false, new ArrayList<Long>()));
-        dummyTasks.add(new Task(0, 1, "Task 4", 7, true, false, new ArrayList<Long>()));
+        dummyTasks.add(new Task(0, 1, "Vegetables", 12, false, true, new ArrayList<Long>()));
+        dummyTasks.add(new Task(0, 1, "Meat", 10, false, true, new ArrayList<Long>()));
+        dummyTasks.add(new Task(0, 1, "Bolognese", 10, false, false, new ArrayList<Long>()));
+        dummyTasks.add(new Task(0, 1, "Task 4", 42, true, false, new ArrayList<Long>()));
         dummyTasks.add(new Task(0, 1, "Task 5, dependant on task 1 and task 2", 7, true, false, Arrays.asList((long)1,(long)2)));
         dummyTasks.add(new Task(0, 1, "Task 6, dependant on task 3 and task 4", 7, true, false, Arrays.asList((long)3,(long)4)));
 
@@ -195,6 +195,8 @@ public class DummyData {
         ri.add(ri4);
         ri.add(ri5);
         return ri;
+
     }
+
 
 }

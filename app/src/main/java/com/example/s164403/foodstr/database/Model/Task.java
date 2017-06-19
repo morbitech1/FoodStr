@@ -22,9 +22,11 @@ public class Task {
     public int duration;
     public boolean requireAttention;
     public boolean cariesOnHot;
+    public String description;
     private long recipeId;
     private Recipe recipeCache;
     private SQLiteDatabase db;
+
 
     private List<Long> preRequisiteIds;
 
@@ -51,7 +53,7 @@ public class Task {
         preRequisiteIds = new DatabasePreRequisite(this.db).getPreRequisiteIds(id);
     }
 
-    public Task(long id, long recipeId, String name, int duration, boolean requireAttention, boolean cariesOnHot, List<Long> preRequisiteIds) {
+    public Task(long id, long recipeId, String name, int duration, boolean requireAttention, boolean cariesOnHot, List<Long> preRequisiteIds, String description) {
         this.id = id;
         this.name = name;
         this.duration = duration;
@@ -59,6 +61,7 @@ public class Task {
         this.cariesOnHot = cariesOnHot;
         this.recipeId = recipeId;
         this.preRequisiteIds = preRequisiteIds;
+        this.description = description;
     }
 
     public RecipeStep getRecipeStep(Map<Long, RecipeStep> cacheMap) {
