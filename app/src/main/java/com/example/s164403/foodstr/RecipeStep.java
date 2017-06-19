@@ -53,6 +53,10 @@ public class RecipeStep {
         step.removePredecessor(this);
     }
 
+    public void clearPreRequisites(){
+        prerequisites.clear();
+    }
+
     private void addPredecessor(RecipeStep step) {
         predecessors.add(step);
     }

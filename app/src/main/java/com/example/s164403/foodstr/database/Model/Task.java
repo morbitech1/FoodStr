@@ -79,7 +79,9 @@ public class Task {
             cacheMap.put(id, step);
         }
         if (res != null) {
-            res.setPrerequisites(preRequisiteSteps);
+            res.clearPreRequisites();
+            for(RecipeStep recipeStep : preRequisiteSteps)
+                res.addPrerequisite(recipeStep);
         } else {
             res = new RecipeStep(cariesOnHot, duration, requireAttention, preRequisiteSteps, name);
             cacheMap.put(id, res);

@@ -21,8 +21,8 @@ public class MainActivity extends AppCompatActivity{
     FrameLayout mainView;
     LinearLayout menuBar;
     ImageView search, fridge, cook, accept;
-    Fridge fridgeFragment = new Fridge();
-    SearchResult searchResultFragment = new SearchResult();
+    FridgeFragment fridgeFragment = new FridgeFragment();
+    SearchResultFragment searchResultFragment = new SearchResultFragment();
     TimelineFragment timeline = new TimelineFragment();
 
     @Override
