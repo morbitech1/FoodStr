@@ -28,7 +28,7 @@ import java.util.Map;
  * Created by Morbi95 on 15-Jun-17.
  */
 
-public class SearchResult extends Fragment implements OnSearchCompleted {
+public class SearchResultFragment extends Fragment implements OnSearchCompleted {
     EditText filter, numOfPeople;
     ListView recipes;
     SQLiteDatabase db;
@@ -47,6 +47,13 @@ public class SearchResult extends Fragment implements OnSearchCompleted {
         super.onStart();
         ImageView fridge = (ImageView) getActivity().findViewById(R.id.button_fridge);
         fridge.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(db != null)
+            db.close();
     }
 
     @Override
@@ -95,7 +102,7 @@ public class SearchResult extends Fragment implements OnSearchCompleted {
 
                 bundle.putInt("peopleCount", numberOfPeople);
                 Log.d(TAG, "Making recipe fragment");
-                RecipeOverview recipeOverview = new RecipeOverview();
+                RecipeOverviewFragment recipeOverview = new RecipeOverviewFragment();
                 recipeOverview.setArguments(bundle);
                 getFragmentManager().beginTransaction().replace(R.id.main_view,recipeOverview ).addToBackStack(null).commit();
             }

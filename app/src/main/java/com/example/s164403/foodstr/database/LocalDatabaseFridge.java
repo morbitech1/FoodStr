@@ -3,10 +3,16 @@ package com.example.s164403.foodstr.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
+import com.example.s164403.foodstr.FridgeFragment;
 import com.example.s164403.foodstr.database.Model.Ingredient;
+import com.example.s164403.foodstr.database.Model.Recipe;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Morbi95 on 14-Jun-17.

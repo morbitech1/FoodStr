@@ -42,17 +42,6 @@ public class Task {
         return recipeCache;
     }
 
-    public Task(long id, long recipeId, String name, boolean requireAttention, boolean cariesOnHot, int duration, SQLiteDatabase db) {
-        this.id = id;
-        this.recipeId = recipeId;
-        this.name = name;
-        this.duration = duration;
-        this.requireAttention = requireAttention;
-        this.cariesOnHot = cariesOnHot;
-        this.db = db;
-        preRequisiteIds = new DatabasePreRequisite(this.db).getPreRequisiteIds(id);
-    }
-
     public Task(long id, long recipeId, String name, int duration, boolean requireAttention, boolean cariesOnHot, List<Long> preRequisiteIds, String description) {
         this.id = id;
         this.name = name;
@@ -62,6 +51,18 @@ public class Task {
         this.recipeId = recipeId;
         this.preRequisiteIds = preRequisiteIds;
         this.description = description;
+    }
+
+    public Task(long id, long recipeId, String name, int duration, boolean requireAttention, boolean cariesOnHot, String description, SQLiteDatabase db) {
+        this.id = id;
+        this.name = name;
+        this.duration = duration;
+        this.requireAttention = requireAttention;
+        this.cariesOnHot = cariesOnHot;
+        this.recipeId = recipeId;
+        this.preRequisiteIds = preRequisiteIds;
+        this.description = description;
+        this.db = db;
     }
 
     public RecipeStep getRecipeStep(Map<Long, RecipeStep> cacheMap) {
@@ -78,7 +79,9 @@ public class Task {
             cacheMap.put(id, step);
         }
         if (res != null) {
-            res.setPrerequisites(preRequisiteSteps);
+            res.clearPreRequisites();
+            for(RecipeStep recipeStep : preRequisiteSteps)
+                res.addPrerequisite(recipeStep);
         } else {
             res = new RecipeStep(cariesOnHot, duration, requireAttention, preRequisiteSteps, name);
             cacheMap.put(id, res);
