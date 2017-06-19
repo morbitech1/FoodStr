@@ -118,6 +118,22 @@ public class RecipeOverviewFragment extends Fragment {
                 }
             }
         });
+
+        ImageView cook = (ImageView) getActivity().findViewById(R.id.button_cook);
+        cook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Changing to cook fragment");
+                TimelineFragment timelineFragment = new TimelineFragment();
+                Bundle bundle = new Bundle();
+                bundle.putLong("recipeID", recipe.id);
+                timelineFragment.setArguments(bundle);
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.main_view, timelineFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
     }
 
 }

@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity{
     ImageView search, fridge, cook, accept;
     FridgeFragment fridgeFragment = new FridgeFragment();
     SearchResultFragment searchResultFragment = new SearchResultFragment();
-    TimelineFragment timeline = new TimelineFragment();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +32,6 @@ public class MainActivity extends AppCompatActivity{
         menuBar = (LinearLayout) findViewById(R.id.menu_bar);
         search = (ImageView) findViewById(R.id.button_search);
         fridge = (ImageView) findViewById(R.id.button_fridge);
-        cook = (ImageView) findViewById(R.id.button_cook);
         accept = (ImageView) findViewById(R.id.button_accept);
 
         if(savedInstanceState == null) {
@@ -57,23 +55,6 @@ public class MainActivity extends AppCompatActivity{
                         .replace(R.id.main_view, fridgeFragment)
                         .addToBackStack(null)
                         .commit();
-            }
-        });
-        cook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Changing to cook fragment");
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.main_view, timeline)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
-        accept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Starting alarms");
-                timeline.setAlarms();
             }
         });
 

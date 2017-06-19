@@ -11,7 +11,7 @@ import com.example.s164403.foodstr.R;
  */
 
 public class MainDatabaseHelper extends SQLiteOpenHelper {
-    public static final int VERSION = 5;
+    public static final int VERSION = 6;
 
     private final DatabaseTableDefinition[] definitions = {
             new DatabaseIngredient(),

@@ -41,6 +41,7 @@ import java.util.Calendar;
 
 public class TimelineFragment extends Fragment {
 
+    public final static String TAG = "Timeline-fragment";
     private TextView mTextMessage;
 
     /*private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -102,12 +103,21 @@ public class TimelineFragment extends Fragment {
         MainDatabaseHelper databaseHelper = new MainDatabaseHelper(getActivity());
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         DatabaseRecipe databaseRecipe = new DatabaseRecipe(db);
-        Recipe recipe = databaseRecipe.getRecipe(1);
+        Recipe recipe = databaseRecipe.getRecipe(getArguments().getLong("recipeID"));
         db.close();
         Timeline timeline = new Timeline(recipe, getActivity());
         timeline.loadTimelineFromDatabase();
         timeline.sort();
         loadTimeline(timeline);
+
+        ImageView accept = (ImageView) getActivity().findViewById(R.id.button_accept);
+        accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Starting alarms");
+                setAlarms();
+            }
+        });
     }
 
     private Timeline timeline;
