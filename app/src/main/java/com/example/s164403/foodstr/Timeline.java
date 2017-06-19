@@ -237,7 +237,7 @@ public class Timeline {
 
             for(ArrayList<RecipeStep> line : steps2){
                 for (int i = 0; i<line.size();i++){
-                    if(line.get(i).isPredecessor){
+                    if(line.get(i).isPredecessor(step)){
                         for (int k = i; i >= 0; i--) {
                             if( starttid<line.get(i).getTime()) {
                                 starttid=line.get(i).getTime();
