@@ -19,9 +19,9 @@ import java.util.Map;
  */
 
 public class LocalDatabaseFridge extends DatabaseTableDefinition{
-    private static final String NAME = "fridge";
-    private static final String COL1 = "ingredientId";
-    private static final String COL2 = "amount";
+    public static final String NAME = "fridge";
+    public static final String COL1 = "ingredientId";
+    public static final String COL2 = "amount";
 
     public LocalDatabaseFridge(){}
     public LocalDatabaseFridge(SQLiteDatabase db){

@@ -230,7 +230,6 @@ public class Timeline {
 
         for(RecipeStep step : steps){
             int[] position= bestPosition(step);
-            steps.insert
         }
 
 
@@ -238,6 +237,6 @@ public class Timeline {
 
     public int[] bestPosition(RecipeStep step){
 
-
+        return null;
     }
 }
