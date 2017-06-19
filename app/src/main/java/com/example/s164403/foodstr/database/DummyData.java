@@ -53,7 +53,8 @@ public class DummyData {
         dummyTasks.add(new Task(6, 1, "Mix", 5, true, true, Arrays.asList((long)4,(long)5), "To finish the sauce, stir in the milk and season to taste. Tip the pasta onto a plate and top with the Bolognese. Serve with the Parmesan.";
 
         dummyTasks.add(new Task(7, 2, "Prepare ingredients", 10, true, false, new ArrayList<Long>(), "Chop onion, separate the garlic into cloves, chop sweet potatoes, parsnips and carrots into chunks"));
-        dummyTasks.add(new Task(8, 2, "Heat oven", ));
+
+
         return dummyTasks;
     }
 
