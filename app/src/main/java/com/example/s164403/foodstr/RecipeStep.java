@@ -2,6 +2,7 @@ package com.example.s164403.foodstr;
 
 import com.example.s164403.foodstr.database.Model.Recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,14 +26,18 @@ public class RecipeStep {
     }
     public RecipeStep(){};
 
-    public RecipeStep(boolean hot, int time, boolean hand, List<RecipeStep> prerequisites, String name) {
+    public RecipeStep(boolean hot, int time, boolean hand, List<RecipeStep> prerequisites, String name, String description) {
         this.hot = hot;
         this.time = time;
         this.hand = hand;
         this.name = name;
+        this.predecessors = new ArrayList<>();
+        this.prerequisites = new ArrayList<>();
+        this.description = description;
         for (RecipeStep step : prerequisites){
             addPrerequisite(step);
         }
+
     }
 
     public void setName(String name) {this.name = name;}

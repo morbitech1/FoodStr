@@ -53,14 +53,19 @@ public class Task {
         this.description = description;
     }
 
+    public  Task(long recipeId, String name, int duration, boolean requireAttention, boolean cariesOnHot, List<Long> preRequisiteIds, String description) {
+        this(-1, recipeId, name, duration, requireAttention, cariesOnHot, preRequisiteIds, description);
+    }
+
     public Task(long id, long recipeId, String name, int duration, boolean requireAttention, boolean cariesOnHot, String description, SQLiteDatabase db) {
+        DatabasePreRequisite dbPreRequisites = new DatabasePreRequisite(db);
         this.id = id;
         this.name = name;
         this.duration = duration;
         this.requireAttention = requireAttention;
         this.cariesOnHot = cariesOnHot;
         this.recipeId = recipeId;
-        this.preRequisiteIds = preRequisiteIds;
+        this.preRequisiteIds = new DatabasePreRequisite(db).getPreRequisiteIds(id);
         this.description = description;
         this.db = db;
     }
@@ -83,7 +88,7 @@ public class Task {
             for(RecipeStep recipeStep : preRequisiteSteps)
                 res.addPrerequisite(recipeStep);
         } else {
-            res = new RecipeStep(cariesOnHot, duration, requireAttention, preRequisiteSteps, name);
+            res = new RecipeStep(cariesOnHot, duration, requireAttention, preRequisiteSteps, name, description);
             cacheMap.put(id, res);
         }
         return res;

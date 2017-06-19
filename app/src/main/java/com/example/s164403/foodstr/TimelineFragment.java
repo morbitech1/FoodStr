@@ -106,6 +106,7 @@ public class TimelineFragment extends Fragment {
         db.close();
         Timeline timeline = new Timeline(recipe, getActivity());
         timeline.loadTimelineFromDatabase();
+        timeline.sort();
         loadTimeline(timeline);
     }
 
