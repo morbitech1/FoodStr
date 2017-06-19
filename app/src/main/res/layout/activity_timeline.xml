@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="1"
-    tools:context="com.example.s164403.foodstr.TimelineActivity">
+    tools:context="com.example.s164403.foodstr.TimelineFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -76,35 +76,6 @@
             </ScrollView>
         </LinearLayout>
     </FrameLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/menu_bar"
-        android:background="@android:color/holo_green_dark"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
-
-        <ImageButton
-            android:id="@+id/button_fridge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/fridge_icon" />
-
-        <ImageButton
-            android:id="@+id/button_alarms"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/accept_icon" />
-    </LinearLayout>
 
 
 </RelativeLayout>

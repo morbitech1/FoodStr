@@ -1,9 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.example.s164403.foodstr"
-    xmlns:app2="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/edit_step_frame"
-    android:layout_width="275dp"
-    android:layout_height="100dp">
+             xmlns:app="http://schemas.android.com/apk/res/com.example.s164403.foodstr"
+             xmlns:app2="http://schemas.android.com/apk/res-auto"
+             android:id="@+id/edit_step_frame"
+             android:layout_width="match_parent"
+             android:layout_height="100dp">
 
     <!--<com.example.s164403.foodstr.RecipeStepContextView
         android:layout_width="300dp"
@@ -18,7 +18,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="100dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:text="TextView"/>
 
             <Button
                 android:id="@+id/edit_step_delete"
@@ -42,12 +42,14 @@
                 android:text="-"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
         </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp">
 
             <LinearLayout
                 android:id="@+id/linearLayout3"
@@ -61,7 +63,7 @@
                     android:id="@+id/edit_step_time_down"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:text="-" />
+                    android:text="-"/>
 
                 <LinearLayout
                     android:layout_width="50dp"
@@ -73,7 +75,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="990" />
+                        android:inputType="number"
+                        android:text="10"/>
 
                     <TextView
                         android:id="@+id/textView3"
@@ -82,7 +85,7 @@
                         android:layout_marginTop="-15dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="min" />
+                        android:text="min"/>
                 </LinearLayout>
 
                 <Button
@@ -90,7 +93,7 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_weight="1"
-                    android:text="+" />
+                    android:text="+"/>
 
             </LinearLayout>
 
@@ -98,20 +101,21 @@
                 android:id="@+id/edit_step_hot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="35dp"
-                android:layout_toEndOf="@+id/linearLayout3"
                 android:layout_weight="1"
-                app2:srcCompat="@android:drawable/stat_sys_warning" />
+                app2:srcCompat="@android:drawable/stat_sys_warning"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/edit_step_hand"
+                android:layout_marginEnd="12dp"/>
 
             <ImageButton
                 android:id="@+id/edit_step_hand"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/edit_step_hot"
+                android:layout_marginEnd="51dp"
                 android:scaleType="fitCenter"
-                app2:srcCompat="@drawable/ic_dashboard_black_24dp" />
+                app2:srcCompat="@drawable/ic_dashboard_black_24dp"
+                android:layout_alignTop="@+id/edit_step_hot"
+                android:layout_alignParentEnd="true"/>
 
         </RelativeLayout>
 

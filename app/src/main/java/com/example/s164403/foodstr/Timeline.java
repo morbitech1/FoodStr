@@ -160,6 +160,8 @@ public class Timeline {
             }
         }
         db.close();
+
+        sort();
     }
 
     public static Timeline getTestTimeline(){

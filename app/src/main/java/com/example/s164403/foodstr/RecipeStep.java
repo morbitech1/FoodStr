@@ -1,5 +1,7 @@
 package com.example.s164403.foodstr;
 
+import com.example.s164403.foodstr.database.Model.Recipe;
+
 import java.util.List;
 
 /**
@@ -11,7 +13,9 @@ public class RecipeStep {
     private int time = 10;
     private boolean hand;
     private List<RecipeStep> prerequisites;
+    private List<RecipeStep> predecessors;
     private String name = "";
+    private String description = "";
 
     private int starttime;
     private int line;
@@ -26,17 +30,41 @@ public class RecipeStep {
         this.time = time;
         this.hand = hand;
         this.name = name;
-        this.prerequisites = prerequisites;
+        for (RecipeStep step : prerequisites){
+            addPrerequisite(step);
+        }
     }
 
     public void setName(String name) {this.name = name;}
     public String getName() {return name;}
 
+    public void setDescription(String desc) {this.description = desc;}
+    public String getDescription() {return description;}
+
     public List<RecipeStep> getPrerequisites() {
         return prerequisites;
     }
-    public void setPrerequisites(List<RecipeStep> prerequisites) {
-        this.prerequisites = prerequisites;
+    public void addPrerequisite(RecipeStep prerequisite) {
+        prerequisites.add(prerequisite);
+        prerequisite.addPredecessor(this);
+    }
+    public void removePrerequisite(RecipeStep step){
+        prerequisites.remove(step);
+        step.removePredecessor(this);
+    }
+
+    private void addPredecessor(RecipeStep step) {
+        predecessors.add(step);
+    }
+    private void removePredecessor(RecipeStep step) {
+        predecessors.remove(step);
+    }
+
+    public boolean isPrerequisite(RecipeStep step){
+        return prerequisites.contains(step);
+    }
+    public boolean isPredecessor(RecipeStep step){
+        return predecessors.contains(step);
     }
 
     public void setHot(boolean hot){this.hot = hot;}

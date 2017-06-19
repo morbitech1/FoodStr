@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity{
     ImageView search, fridge, cook, accept;
     Fridge fridgeFragment = new Fridge();
     SearchResult searchResultFragment = new SearchResult();
+    TimelineFragment timeline = new TimelineFragment();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,12 +63,17 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Changing to cook fragment");
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.main_view, timeline)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Starting alarms");
+                timeline.setAlarms();
             }
         });
 
