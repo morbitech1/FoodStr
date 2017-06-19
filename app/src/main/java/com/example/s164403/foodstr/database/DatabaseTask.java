@@ -50,10 +50,10 @@ public class DatabaseTask extends DatabaseTableDefinition {
         int recipeId = cursor.getInt(cursor.getColumnIndex(COL2));
         int duration = cursor.getInt(cursor.getColumnIndex(COL3));
         String name = cursor.getString(cursor.getColumnIndex(COL4));
-        boolean hands = cursor.getInt(cursor.getColumnIndex(COL5)) != 0;
-        boolean hot = cursor.getInt(cursor.getColumnIndex(COL6)) != 0;
+        boolean hot = cursor.getInt(cursor.getColumnIndex(COL5)) != 0;
+        boolean hands = cursor.getInt(cursor.getColumnIndex(COL6)) != 0;
         String description = cursor.getString(cursor.getColumnIndex(COL7));
-        return new Task(id, recipeId, name,duration, hands, hot,description, db);
+        return new Task(id, recipeId, name,duration, hands, hot, description, db);
     }
 
     public boolean addTask(Task taskToAdd) {
