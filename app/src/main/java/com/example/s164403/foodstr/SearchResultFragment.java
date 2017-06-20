@@ -125,9 +125,7 @@ public class SearchResultFragment extends Fragment implements OnSearchCompleted 
 
     private void startSearchTask() {
         if (currentSearchInDatabaseTask != null) {
-            if (currentSearchInDatabaseTask.cancel(true)) {
-                return;
-            }
+            currentSearchInDatabaseTask.cancel(true);
         }
         currentSearchInDatabaseTask = new SearchInDatabaseTask(this);
 
@@ -170,7 +168,7 @@ public class SearchResultFragment extends Fragment implements OnSearchCompleted 
             if (params.length >= 1) {
                 SearchQuery query = params[0];
                 searchResult = query.databaseRecipeIngredient.searchRecipesByScore(
-                        query.numOfPeople, query.limit, query.filter);
+                    query.numOfPeople, query.limit, query.filter);
             }
             return searchResult;
         }

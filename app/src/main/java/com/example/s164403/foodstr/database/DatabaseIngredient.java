@@ -53,15 +53,8 @@ public class DatabaseIngredient extends DatabaseTableDefinition {
         return result;
     }
 
-    public boolean hasIngredient(String name){
-        Cursor cursor = db.rawQuery("SELECT * FROM " + NAME + " WHERE " + COL2 +"= \""+name+"\"", null);
-        boolean hasIngredient = cursor.moveToFirst();
-        cursor.close();
-        return hasIngredient;
-    }
-
     public long getId( String name){
-        Cursor cursor = db.rawQuery("SELECT "+COL1+" FROM " + NAME + " WHERE " + COL2 +"= \""+name+"\"", null);
+        Cursor cursor = db.rawQuery("SELECT "+COL1+" FROM " + NAME + " WHERE " + COL2 +"=?", new String[]{name});
         long id;
         if(cursor.moveToFirst())
             id = cursor.getLong(0);
@@ -101,8 +94,8 @@ public class DatabaseIngredient extends DatabaseTableDefinition {
 
     public Ingredient getIngredient(String name){
         Cursor cursor = db.rawQuery(
-                "SELECT * FROM " + NAME + " WHERE " + COL2 + "=\"" + name + "\""
-                ,null);
+                "SELECT * FROM " + NAME + " WHERE " + COL2 + "=?"
+                ,new String[]{name});
         Ingredient res = null;
         if(cursor.moveToFirst())
             res = new Ingredient(cursor);
