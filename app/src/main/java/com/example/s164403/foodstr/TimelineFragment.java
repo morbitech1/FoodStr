@@ -89,6 +89,7 @@ public class TimelineFragment extends Fragment {
         accept.setVisibility(View.GONE);
     }
 
+    private Recipe recipe;
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -97,7 +98,7 @@ public class TimelineFragment extends Fragment {
         MainDatabaseHelper databaseHelper = new MainDatabaseHelper(getActivity());
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         DatabaseRecipe databaseRecipe = new DatabaseRecipe(db);
-        Recipe recipe = databaseRecipe.getRecipe(getArguments().getLong("recipeID"));
+        recipe = databaseRecipe.getRecipe(getArguments().getLong("recipeID"));
         db.close();
         Timeline timeline2 = new Timeline(recipe, getActivity());
         timeline2.loadTimelineFromDatabase();
@@ -242,7 +243,7 @@ public class TimelineFragment extends Fragment {
                 startActivityForResult(intent, alarm.getTime());*/
 
                 Intent intent = new Intent(AlarmNotificationReceiver.INTENT_BROADCAST);
-                intent.putExtra("recipe", "Noget mad");
+                intent.putExtra("recipe", recipe.name);
                 intent.putExtra("start", alarm.getStartingString());
                 intent.putExtra("end", alarm.getEndingString());
                 intent.putExtra("hour", thour);
@@ -261,7 +262,7 @@ public class TimelineFragment extends Fragment {
                 }else {
                     //intent.putExtra("novibrate", true);
                     PendingIntent pi = PendingIntent.getBroadcast(getActivity(), time, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    manager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, millis + time * 1000, pi);
+                    manager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, millis + (((long)time) * 60000), pi);
                     Log.i("AlarmSent", strtime);
 
                     AlarmNotificationReceiver.alarmids.add(time);
