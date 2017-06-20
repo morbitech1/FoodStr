@@ -55,13 +55,17 @@ public class SearchResultAdapter extends BaseAdapter{
             v = activity.getLayoutInflater().inflate(R.layout.search_result_list_element, null);
 
         Recipe recipe = keys.get(i);
-        double score = data.get(recipe);
+        Double score = data.get(recipe);
 
         TextView recipeName = (TextView) v.findViewById(R.id.recipe_name);
         recipeName.setText(recipe.name);
 
         ProgressBar recipeScore = (ProgressBar) v.findViewById(R.id.recipe_score);
-        recipeScore.setProgress((int) score);
+        recipeScore.setProgress(score.intValue());
+
+        TextView recipeScoreText = (TextView) v.findViewById(R.id.recipe_score_text);
+        recipeScoreText.setText((score.intValue() >= 100 ? "✓" : score.intValue()+ "%"));
+
 
         return v;
     }
