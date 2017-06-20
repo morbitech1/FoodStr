@@ -14,6 +14,8 @@ import com.example.s164403.foodstr.database.Model.Ingredient;
 import com.example.s164403.foodstr.database.Model.Recipe;
 import com.example.s164403.foodstr.database.Model.RecipeIngredientRelation;
 
+import org.w3c.dom.Text;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -126,6 +128,9 @@ public class RecipeIngredientAdapter extends BaseAdapter{
 
         ProgressBar recipeIngredientScore = (ProgressBar) view.findViewById(R.id.recipe_ingredient_score);
         recipeIngredientScore.setProgress(percentage.intValue());
+
+        TextView recipeIngredientScoreText = (TextView) view.findViewById(R.id.recipe_ingredeint_score_text);
+        recipeIngredientScoreText.setText( (percentage.intValue() >= 100 ? "✓" : percentage.intValue()+ "%") );
 
         TextView recipePersonCount = (TextView) view.findViewById(R.id.recipe_person_count);
         recipePersonCount.setText(""+people);
