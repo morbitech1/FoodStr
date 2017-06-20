@@ -1,5 +1,7 @@
 package com.example.s164403.foodstr;
 
+import android.util.Log;
+
 import com.example.s164403.foodstr.database.Model.Recipe;
 
 import java.util.ArrayList;
@@ -99,5 +101,22 @@ public class RecipeStep {
 
     public String toString(){
         return "[Step: "+getName()+"] Start: "+getStartTime()+", Dur: "+getTime()+", Line: "+getLine()+", Hot: "+getHot()+", Hands: "+getNeedsHand();
+    }
+
+    public boolean createsDependencyCycle(RecipeStep step){
+        if (step == this) return true;
+        ArrayList<RecipeStep> handled = new ArrayList<RecipeStep>();
+        return recursiveDependencyCheck(step, handled);
+    }
+    private boolean recursiveDependencyCheck(RecipeStep step, ArrayList<RecipeStep> handled){
+        for (RecipeStep step2 : step.getPrerequisites()){
+            if (!handled.contains(step2)){
+                if (step2 == this) return true;
+
+                handled.add(step);
+                return recursiveDependencyCheck(step2, handled);
+            }
+        }
+        return false;
     }
 }

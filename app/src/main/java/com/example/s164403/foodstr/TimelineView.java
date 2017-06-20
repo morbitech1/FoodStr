@@ -33,6 +33,7 @@ public class TimelineView extends View {
 
     //ATTRIBUTES
     private int linedist = 30;
+    private int markerdist = 10;
 
     public TimelineView(Context context) {
         super(context);
@@ -115,8 +116,9 @@ public class TimelineView extends View {
             canvas.drawText(String.valueOf(finishtime), contentWidth + paddingLeft - 20, 35, mLinePaint);
 
             float dist = (float)contentWidth/finishtime;
+            markerdist = Math.max((finishtime/100)*10, 10);
 
-            for (int i = 10; i < finishtime; i+= 10){
+            for (int i = markerdist; i < finishtime; i+= markerdist){
                 canvas.drawLine(i*dist + paddingLeft, 53, i*dist + paddingLeft, 70, mLinePaint2);
                 canvas.drawText(String.valueOf(i), i*dist + paddingLeft - 15, 48, mLinePaint2);
             }

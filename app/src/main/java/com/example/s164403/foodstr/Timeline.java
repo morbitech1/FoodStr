@@ -9,6 +9,7 @@ import com.example.s164403.foodstr.database.MainDatabaseHelper;
 import com.example.s164403.foodstr.database.Model.Recipe;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -36,6 +37,14 @@ public class Timeline {
             return r1.getTime() < r2.getTime() ? 1 : (r1.getTime() > r2.getTime() ? -1 : 0);
         }
     };
+    private static Comparator<RecipeStep> sortByFirstStart = new Comparator<RecipeStep>() {
+        @Override
+        public int compare(RecipeStep r1, RecipeStep r2) {
+            int time1 = r1.getStartTime() + r1.getTime();
+            int time2 = r2.getStartTime() + r2.getTime();
+            return time1 < time2 ? 1 : (time1 > time2 ? -1 : 0);
+        }
+    };
 
 
     public Timeline(Recipe recipe, Context mContext) {
@@ -56,8 +65,13 @@ public class Timeline {
         steps.remove(step);
     }
 
+    private int numhands = 1;
     public int getAvailableHands(){
-        return 1;
+        return numhands;
+    }
+    public void setAvailableHands(int hands){
+        numhands = hands;
+        sort();
     }
 
     private void planStep(RecipeStep step, int start, int line){
@@ -72,21 +86,23 @@ public class Timeline {
 
     public void initiateAlarms(){
         for (RecipeStep step : steps){
-            int start = finishtime-step.getStartTime();
-            int end = start + step.getTime();
+            int end = step.getStartTime();
+            int start = end + step.getTime();
+
+            Log.i("ALarmtid", start + ", " + end + ", Step: " +step.getName());
 
             if (alarms.get(start) == null){alarms.put(start, new StepAlarm(start, recipe));}
-            alarms.get(start).addEndingStep(step);
+            alarms.get(start).addStartingStep(step);
 
             if (alarms.get(end) == null){alarms.put(end, new StepAlarm(end, recipe));}
-            alarms.get(end).addStartingStep(step);
+            alarms.get(end).addEndingStep(step);
         }
     }
 
     public int getFinishTime(){return finishtime;}
     public ArrayList<RecipeStep> getSteps(){return steps;}
 
-    public void sort(){
+    /*public void sort(){
         //Reset our alarms - we will calculate them here
         alarms = new HashMap<Integer, StepAlarm>();
         finishtime = 0;
@@ -154,7 +170,7 @@ public class Timeline {
                 }
             }
         }
-    }
+    }*/
 
     public HashMap<Integer, StepAlarm> getAlarmTimes(){
         return alarms;
@@ -218,7 +234,7 @@ public class Timeline {
         r7.setNeedsHand(false);
         tester.addStep(r7);
 
-        tester.sort3();
+        tester.sort();
 
         return tester;
     }
@@ -295,7 +311,7 @@ public class Timeline {
 
     private ArrayList<ArrayList<RecipeStep>> sorted;
     private ArrayList<RecipeStep> handled;
-    public void sort3(){
+    public void sort(){
         sorted = new ArrayList<ArrayList<RecipeStep>>();
         handled = new ArrayList<RecipeStep>();
         alarms = new HashMap<Integer, StepAlarm>();
@@ -348,6 +364,8 @@ public class Timeline {
         }else{
             initiateAlarms();
         }
+
+        Collections.sort(steps, sortByFirstStart);
     }
 
     protected int[] getBestPositionForStep(RecipeStep step){

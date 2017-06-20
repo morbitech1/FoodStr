@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -64,14 +65,14 @@ public class RecipeStepsView extends View {
                 expanded = !expanded;
 
                 if (expanded) {
-                    expand(root.findViewById(R.id.description));
+                    expand(root.findViewById(R.id.extend_layout));
                 }else{
-                    collapse(root.findViewById(R.id.description));
+                    collapse(root.findViewById(R.id.extend_layout));
                 }
             }
         });
 
-        TextView desc = (TextView) root.findViewById(R.id.description);
+        LinearLayout desc = (LinearLayout) root.findViewById(R.id.extend_layout);
         desc.setVisibility(View.GONE);
         //desc.setText("");
     }

@@ -100,12 +100,28 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"/>-->
 
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/extend_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="60dp"
-        android:padding="10dp"
-        android:text="Her er noget lædnwjadkjwahdulawhdukyawgdywagdwafdgwadgwlaiudhlkwauhdjawgsjdgaduwgahdgajdgsjadgwgydjawgdjagdysagjdawgdagwydsgajdgjsagxgxhvgfdfgqygdksagdshgadluawgdjagdjsada"/>
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/extendtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hamburger"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Her er noget lædnwjadkjwahdulawhdukyawgdywagdwafdgwadgwlaiudhlkwauhdjawgsjdgaduwgahdgajdgsjadgwgydjawgdjagdysagjdawgdagwydsgajdgjsagxgxhvgfdfgqygdksagdshgadluawgdjagdjsada"/>
+    </LinearLayout>
 
 </FrameLayout>

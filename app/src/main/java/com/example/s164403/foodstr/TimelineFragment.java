@@ -30,13 +30,16 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.s164403.foodstr.database.DatabaseRecipe;
 import com.example.s164403.foodstr.database.MainDatabaseHelper;
 import com.example.s164403.foodstr.database.Model.Recipe;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class TimelineFragment extends Fragment {
@@ -90,6 +93,26 @@ public class TimelineFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        //loadTimeline(Timeline.getTestTimeline());
+        MainDatabaseHelper databaseHelper = new MainDatabaseHelper(getActivity());
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        DatabaseRecipe databaseRecipe = new DatabaseRecipe(db);
+        Recipe recipe = databaseRecipe.getRecipe(getArguments().getLong("recipeID"));
+        db.close();
+        Timeline timeline2 = new Timeline(recipe, getActivity());
+        timeline2.loadTimelineFromDatabase();
+        timeline2.sort();
+        loadTimeline(timeline2);
+
+        ImageView accept = (ImageView) getActivity().findViewById(R.id.button_accept);
+        accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Log.d(TAG, "Starting alarms");
+                setAlarms();
+            }
+        });
+
         ImageButton newstep = (ImageButton) getActivity().findViewById(R.id.step_add);
         newstep.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -98,23 +121,41 @@ public class TimelineFragment extends Fragment {
             }
         });
 
-        //loadTimeline(Timeline.getTestTimeline());
-        MainDatabaseHelper databaseHelper = new MainDatabaseHelper(getActivity());
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
-        DatabaseRecipe databaseRecipe = new DatabaseRecipe(db);
-        Recipe recipe = databaseRecipe.getRecipe(getArguments().getLong("recipeID"));
-        db.close();
-        Timeline timeline = new Timeline(recipe, getActivity());
-        timeline.loadTimelineFromDatabase();
-        timeline.sort3();
-        loadTimeline(timeline);
+        final TextView handsnum = (TextView) getActivity().findViewById(R.id.hands_num);
+        if (timeline != null) handsnum.setText(""+timeline.getAvailableHands());
 
-        ImageView accept = (ImageView) getActivity().findViewById(R.id.button_accept);
-        accept.setOnClickListener(new View.OnClickListener() {
+        ImageButton handsup = (ImageButton) getActivity().findViewById(R.id.hands_up);
+        handsup.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
-                //Log.d(TAG, "Starting alarms");
-                setAlarms();
+            public void onClick(View v)  {
+                int num = Integer.parseInt(handsnum.getText().toString());
+                if (num < 0){
+                    num = 0;
+                }
+                num += 1;
+                handsnum.setText(""+num);
+                if (timeline != null){
+                    timeline.setAvailableHands(num);
+                    loadTimeline(timeline);
+                }
+                Log.i("Hands", "Added hands: " + num);
+            }
+        });
+
+        ImageButton handsdown = (ImageButton) getActivity().findViewById(R.id.hands_down);
+        handsdown.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)  {
+                int num = Integer.parseInt(handsnum.getText().toString());
+                if (num < 2){
+                    num = 2;
+                }
+                num -= 1;
+                handsnum.setText(""+num);
+                if (timeline != null){
+                    timeline.setAvailableHands(num);
+                    loadTimeline(timeline);
+                }
             }
         });
     }
@@ -147,6 +188,7 @@ public class TimelineFragment extends Fragment {
             int start = end - step.getTime();
             ((TextView) view.findViewById(R.id.timetext)).setText(""+start+" - " + end);
             ((TextView) view.findViewById(R.id.description)).setText(step.getDescription());
+            ((TextView) view.findViewById(R.id.extendtitle)).setText(step.getName());
 
             final RecipeStep finalStep = step;
             ImageButton settings = (ImageButton)view.findViewById(R.id.optionsbutton);
@@ -171,6 +213,8 @@ public class TimelineFragment extends Fragment {
 
             AlarmManager manager = (AlarmManager) getActivity().getSystemService(getActivity().ALARM_SERVICE);
             long millis = SystemClock.elapsedRealtime();
+
+            AlarmNotificationReceiver.alarmids.clear();
 
             for (StepAlarm alarm : timeline.getAlarmTimes().values()){
                 //System.out.println(alarm.toString());
@@ -208,18 +252,22 @@ public class TimelineFragment extends Fragment {
                 strtime += (thour < 10 ? "0"+thour : thour);
                 strtime += ":"+(tmin < 10 ? "0"+tmin : tmin);
 
+                if (alarm.getTime() > 0) intent.putExtra("sticky", true);
+
                 if (time <= 0){
                     intent.putExtra("novibrate", true);
                     getActivity().sendBroadcast(intent);
                     Log.i("AlarmSent0", strtime);
                 }else {
-                    intent.putExtra("novibrate", true);
+                    //intent.putExtra("novibrate", true);
                     PendingIntent pi = PendingIntent.getBroadcast(getActivity(), time, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    manager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, millis + time * 500, pi);
+                    manager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, millis + time * 1000, pi);
                     Log.i("AlarmSent", strtime);
+
+                    AlarmNotificationReceiver.alarmids.add(time);
                 }
 
-                Log.i("Alarmtid", ""+millis + ", " + time + ", " + (millis+time) + ", "+ strtime);
+                Log.i("Alarmtid", ""+millis + ", " + time + ", " + (millis+time) + ", "+ strtime + ", " + alarm.getTime());
 
             }
         }
@@ -353,6 +401,63 @@ public class TimelineFragment extends Fragment {
                 }
             });
 
+            Button prereq = (Button)view.findViewById(R.id.edit_step_prerequisites);
+            prereq.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final ArrayList<RecipeStep> steps = new ArrayList<RecipeStep>(timeline.getSteps());
+                    steps.remove(finalStep);
+
+                    final String[] names = new String[steps.size()];
+                    final boolean[] checked = new boolean[steps.size()];
+                    for (int i = 0; i < steps.size(); i++){
+                        RecipeStep step = steps.get(i);
+                        checked[i] = finalStep.isPrerequisite(step);
+                        names[i] = step.getName();
+                    }
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    // Set the dialog title
+                    builder.setTitle("Prerequisites")
+                            .setMultiChoiceItems(names, checked,
+                                    new DialogInterface.OnMultiChoiceClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which,
+                                                            boolean isChecked) {
+                                            RecipeStep step = steps.get(which);
+                                            if (finalStep.createsDependencyCycle(step)){
+                                                Toast.makeText(getActivity(), "Cannot set this as prerequisite as it would create a dependency cycle", Toast.LENGTH_LONG).show();
+                                                ListView al = ((AlertDialog)dialog).getListView();
+                                                al.setItemChecked(which, false);
+                                                checked[which] = false;
+                                            }
+                                        }
+                                    })
+                            // Set the action buttons
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    for (int i = 0; i < steps.size(); i++){
+                                        if (finalStep.isPrerequisite(steps.get(i)) != checked[i]){
+                                            if (checked[i]){
+                                                finalStep.addPrerequisite(steps.get(i));
+                                            }else{
+                                                finalStep.removePrerequisite(steps.get(i));
+                                            }
+                                        }
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            });
+                    builder.create().show();
+                }
+            });
+
             builder.setView(view);
             builder.setOnCancelListener(new DialogInterface.OnCancelListener(){
                 @Override
@@ -388,7 +493,7 @@ public class TimelineFragment extends Fragment {
             if (step != null && !timeline.getSteps().contains(step)){
                 timeline.addStep(step);
             }
-            timeline.sort3();
+            timeline.sort();
             loadTimeline(timeline);
         }
     }

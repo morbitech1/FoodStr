@@ -52,6 +52,57 @@
                     android:text="Recipe Steps"
                     android:textSize="20sp" />
 
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
+                    android:weightSum="4"
+                    android:layout_toStartOf="@+id/step_add"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:weightSum="2"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/hands_up"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            app:srcCompat="@android:drawable/arrow_up_float"/>
+
+                        <ImageButton
+                            android:id="@+id/hands_down"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            app:srcCompat="@android:drawable/arrow_down_float"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/hands_num"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="end"
+                        android:text="10"
+                        android:textSize="24sp"/>
+
+                    <ImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/handsymbol"/>
+                </LinearLayout>
+
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/step_add"
                     android:layout_width="wrap_content"
@@ -72,7 +123,7 @@
                     android:id="@+id/step_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:orientation="vertical"/>
             </ScrollView>
         </LinearLayout>
     </FrameLayout>
