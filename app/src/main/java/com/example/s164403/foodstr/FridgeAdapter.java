@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -75,7 +76,7 @@ public class FridgeAdapter extends BaseAdapter {
         final EditText fridgeAmount = (EditText) fragment.findViewById(R.id.fridge_amount);
         TextView fridgeUnit = (TextView)  fragment.findViewById(R.id.fridge_unit);
         fridgeAmount.setId((int)ingredient.id);
-        ImageView fridgeButton = (ImageView) fragment.findViewById(R.id.fridge_remove);
+        Button fridgeButton = (Button) fragment.findViewById(R.id.fridge_remove);
         fridgeIngredient.setText(ingredient.name);
         fridgeAmount.setText(amount >= 0 ? ""+amount : "");
         fridgeUnit.setText(ingredient.primaryUnit.toString());
