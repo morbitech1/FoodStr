@@ -41,7 +41,6 @@ import java.util.Calendar;
 
 public class TimelineFragment extends Fragment {
 
-    public final static String TAG = "Timeline-fragment";
     private TextView mTextMessage;
 
     /*private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -107,14 +106,14 @@ public class TimelineFragment extends Fragment {
         db.close();
         Timeline timeline = new Timeline(recipe, getActivity());
         timeline.loadTimelineFromDatabase();
-        timeline.sort();
+        timeline.sort3();
         loadTimeline(timeline);
 
         ImageView accept = (ImageView) getActivity().findViewById(R.id.button_accept);
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Starting alarms");
+                //Log.d(TAG, "Starting alarms");
                 setAlarms();
             }
         });
@@ -198,7 +197,7 @@ public class TimelineFragment extends Fragment {
                 intent.putExtra(AlarmClock.EXTRA_SKIP_UI, true);
                 startActivityForResult(intent, alarm.getTime());*/
 
-                Intent intent = new Intent();
+                Intent intent = new Intent(AlarmNotificationReceiver.INTENT_BROADCAST);
                 intent.putExtra("recipe", "Noget mad");
                 intent.putExtra("start", alarm.getStartingString());
                 intent.putExtra("end", alarm.getEndingString());
@@ -335,6 +334,25 @@ public class TimelineFragment extends Fragment {
                 }
             });
 
+            TextView description = (TextView)view.findViewById(R.id.edit_step_description);
+            description.setText(finalStep.getDescription());
+            description.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    finalStep.setDescription(s.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
             builder.setView(view);
             builder.setOnCancelListener(new DialogInterface.OnCancelListener(){
                 @Override
@@ -370,7 +388,7 @@ public class TimelineFragment extends Fragment {
             if (step != null && !timeline.getSteps().contains(step)){
                 timeline.addStep(step);
             }
-            timeline.sort();
+            timeline.sort3();
             loadTimeline(timeline);
         }
     }

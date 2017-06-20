@@ -2,6 +2,7 @@ package com.example.s164403.foodstr;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.s164403.foodstr.database.DatabaseTask;
 import com.example.s164403.foodstr.database.MainDatabaseHelper;
@@ -56,21 +57,30 @@ public class Timeline {
     }
 
     public int getAvailableHands(){
-        return 3;
+        return 1;
     }
 
     private void planStep(RecipeStep step, int start, int line){
         step.setStartTime(start);
         step.setLine(line);
 
-        if (alarms.get(start) == null){alarms.put(start, new StepAlarm(start, recipe));}
-        alarms.get(start).addEndingStep(step);
-
         int end = start + step.getTime();
-        if (alarms.get(end) == null){alarms.put(end, new StepAlarm(end, recipe));}
-        alarms.get(end).addStartingStep(step);
-
         if (end > finishtime) finishtime = end;
+
+        Log.i("Test4", step.getName() + " Final Time: "+ ((finishtime-start)-step.getTime()) + " - " + (finishtime-start) + ", Internal Time: " + step.getStartTime() + " - " + step.getStartTime() + step.getTime());
+    }
+
+    public void initiateAlarms(){
+        for (RecipeStep step : steps){
+            int start = finishtime-step.getStartTime();
+            int end = start + step.getTime();
+
+            if (alarms.get(start) == null){alarms.put(start, new StepAlarm(start, recipe));}
+            alarms.get(start).addEndingStep(step);
+
+            if (alarms.get(end) == null){alarms.put(end, new StepAlarm(end, recipe));}
+            alarms.get(end).addStartingStep(step);
+        }
     }
 
     public int getFinishTime(){return finishtime;}
@@ -199,6 +209,7 @@ public class Timeline {
         r6.setTime(70);
         r6.setHot(false);
         r6.setNeedsHand(false);
+        r6.addPrerequisite(r1);
         tester.addStep(r6);
 
         RecipeStep r7 = new RecipeStep("7");
@@ -207,7 +218,7 @@ public class Timeline {
         r7.setNeedsHand(false);
         tester.addStep(r7);
 
-        tester.sort();
+        tester.sort3();
 
         return tester;
     }
@@ -224,7 +235,7 @@ public class Timeline {
         }
     }
 
-    public void sort2(){
+    /*public void sort2(){
 
         ArrayList<ArrayList<RecipeStep>> steps2 = new ArrayList<ArrayList<RecipeStep>>();
         //TODO: tag alle predecessors først
@@ -280,6 +291,192 @@ public class Timeline {
             steps2.get(position[0]).add(position[1], step);
         }
 
+    }*/
+
+    private ArrayList<ArrayList<RecipeStep>> sorted;
+    private ArrayList<RecipeStep> handled;
+    public void sort3(){
+        sorted = new ArrayList<ArrayList<RecipeStep>>();
+        handled = new ArrayList<RecipeStep>();
+        alarms = new HashMap<Integer, StepAlarm>();
+
+        finishtime = 0;
+        recursivePrerequisiteFilter(steps);
+    }
+
+    private void recursivePrerequisiteFilter(ArrayList<RecipeStep> steps){
+        ArrayList<RecipeStep> prereqs = new ArrayList<RecipeStep>();
+        for (RecipeStep step : steps){
+
+            boolean skip = false;
+            for (RecipeStep pre : step.getPredecessors()){
+                if (!handled.contains(pre)){ prereqs.add(step); skip = true; break;}
+            }
+            if (skip) continue;
+
+            int[] pos = getBestPositionForStep(step);
+            handled.add(step);
+            Log.i("Test0", step.getName() + ": ["+pos[0]+", "+pos[1]+", "+pos[2]+"], Sorted: " + sorted.size() + " To String: "+ step.toString());
+            ArrayList<RecipeStep> line;
+            if (pos[0] < sorted.size()){
+                line = sorted.get(pos[0]);
+            }else{
+                line = new ArrayList<RecipeStep>();
+                sorted.add(pos[0], line);
+            }
+
+            if (pos[1] < line.size()) {
+                RecipeStep pushed = line.get(pos[1]);
+                planStep(step, pos[2], pos[0]);
+                Log.i("Test1", step.getName() + " Planned for: "+(pos[2]) + ", pushing " + pushed.getName());
+
+
+                for (int i = pos[1]; i < line.size(); i++){
+                    planStep(line.get(i),line.get(i).getStartTime() + step.getTime(), pos[0]);
+                    Log.i("Test2", line.get(i).getName() + " Moved to: "+(pushed.getStartTime() + pushed.getTime() - step.getTime()));
+                }
+                line.add(pos[1], step);
+            }else{
+                planStep(step,Math.max((line.size() > 0 ? line.get(line.size()-1).getStartTime() + line.get(line.size()-1).getTime() : 0),pos[2]), pos[0]);
+                Log.i("Test3", step.getName() + " Planned for: "+((line.size() > 0 ? line.get(line.size()-1).getStartTime() + line.get(line.size()-1).getTime() : 0)));
+                line.add(line.size(), step);
+            }
+        }
+
+        if (prereqs.size() > 0){
+            recursivePrerequisiteFilter(prereqs);
+        }else{
+            initiateAlarms();
+        }
+    }
+
+    protected int[] getBestPositionForStep(RecipeStep step){
+        if (sorted.size() <= 0){return new int[] {0,0,0};}
+
+        int maxlines = step.getNeedsHand() ? getAvailableHands() : sorted.size() + 1;
+        int start = 0;
+        int end = Integer.MAX_VALUE;
+
+        for (RecipeStep pre : step.getPrerequisites()){
+            if (handled.contains(pre) && pre.getStartTime() < end){end = pre.getStartTime();}
+        }
+        for (RecipeStep pre : step.getPredecessors()){
+            Log.i("Predecessor", pre.getName());
+            if (handled.contains(pre) && pre.getStartTime() + pre.getTime() > start){start = pre.getStartTime() + pre.getTime();}
+        }
+
+        //Sort by least heat loss, least total finish time
+        int heatloss = Integer.MAX_VALUE;
+        int maxtime = Integer.MAX_VALUE;
+        int finishtime = Integer.MAX_VALUE;
+        int[] position = new int[3];
+
+        Log.i("Lines", "Step: "+step.getName()+", Maxlines: "+maxlines + ", Start: " + start + ", End: "+end);
+
+        for (int line = 0; line < maxlines; line++){
+            if (line < sorted.size() && sorted.get(line) != null){
+                ArrayList<RecipeStep> linesteps = sorted.get(line);
+                Log.i("Lineswitch", "Step: "+step.getName()+ " now checking line: "+line);
+
+                for (int si = 0; si <= linesteps.size(); si++){
+                    int time;
+                    if (si <= linesteps.size()){
+                        if (si == linesteps.size()){
+                            time = Math.max(start, linesteps.get(si-1).getStartTime() + linesteps.get(si-1).getTime());
+                        }else {
+                            time = linesteps.get(si).getStartTime();
+                        }
+                    }else{
+                        time = linesteps.get(si-1).getStartTime()+linesteps.get(si-1).getTime();
+                    }
+                    if (time < start || time > end){ Log.i("Lineswitch", "Step: "+step.getName()+ " Out of bounds: "+time); continue;}
+
+                    Log.i("Lineswitch", "Step: "+step.getName()+ " now checking index: "+si+", Time: " + time);
+                    int numheat = 0;
+                    for (int si2 = si; si2 < linesteps.size(); si2++){
+                        if (linesteps.get(si2).getHot()){numheat++;}
+                    }
+
+                    int heat = step.getTime()*numheat;
+
+                    if (si > 0 && linesteps.get(si-1) != null){
+                        RecipeStep st = linesteps.get(si-1);
+                        if (step.getHot()){heat += time;}
+                    }
+                    Log.i("Lineswitch", "Step: "+step.getName()+ " heatloss: "+heat);
+
+                    if (heat < heatloss){
+                        heatloss = heat;
+                        position[0] = line;
+                        position[1] = si;
+                        position[2] = time;
+                        maxtime = Math.max(linesteps.get(linesteps.size()-1).getStartTime()+linesteps.get(linesteps.size()-1).getTime(), time);
+                        Log.i("Lineswitch", "Step: "+step.getName()+ " Heatloss lower! Line: "+line);
+
+                    }else if (heat == heatloss){
+                        Log.i("Lineswitch", "Step: "+step.getName()+ " Heatloss equal. Line: "+line);
+                        ArrayList<RecipeStep> candidate = sorted.get(position[0]);
+                        int length1 = Math.max(linesteps.get(linesteps.size()-1).getStartTime()+linesteps.get(linesteps.size()-1).getTime(), time);
+                        int length2 = maxtime;
+
+                        Log.i("Length", "Step: "+step.getName()+", Length1: "+length1+", Length2:"+length2+", Line: "+line+", Candidate: "+position[0]);
+
+                        if (length1 < length2 ){
+                            Log.i("Lineswitch", "Step: "+step.getName()+ " Length under! Line: "+line);
+                            position[0] = line;
+                            position[1] = si;
+                            position[2] = time;
+                            maxtime = length1;
+                        }else if (length1 == length2){
+                            Log.i("Lineswitch", "Step: "+step.getName()+ " Length equal. Line: "+line);
+                            if (line <= position[0]){
+                                Log.i("Lineswitch", "Step: "+step.getName()+ " Line under or equal. Line: "+line);
+                                position[0] = line;
+                                position[1] = si;
+                                position[2] = time;
+                            }
+                        }
+                    }
+                }
+            }else{
+                Log.i("Lineswitch", "Step: "+step.getName()+ " now checking non-existant line: "+line);
+                int heat = step.getHot() ? start : 0;
+                Log.i("Lineswitch", "Step: "+step.getName()+ " heatloss: "+heat);
+
+                if (heat < heatloss){
+                    Log.i("Lineswitch", "Step: "+step.getName()+ " Heatloss lower! Line: "+line);
+                    heatloss = heat;
+                    position[0] = line;
+                    position[1] = 0;
+                    position[2] = start;
+                }else if (heat == heatloss){
+                    Log.i("Lineswitch", "Step: "+step.getName()+ " Heatloss equal. Line: "+line);
+                    ArrayList<RecipeStep> candidate = sorted.get(position[0]);
+                    int length1 = start;
+                    int length2 = maxtime;
+                    Log.i("Length", "Step: "+step.getName()+", Length1: "+length1+", Length2:"+length2+", Line: "+line+", Candidate: "+position[0]);
+
+                    if (length1 < length2 ){
+                        Log.i("Lineswitch", "Step: "+step.getName()+ " Length under! Line: "+line);
+                        position[0] = line;
+                        position[1] = 0;
+                        position[2] = start;
+                        maxtime = length1;
+                    }else if (length1 == length2){
+                        Log.i("Lineswitch", "Step: "+step.getName()+ " Length equal. Line: "+line);
+                        if (line <= position[0]){
+                            position[0] = line;
+                            position[1] = 0;
+                            position[2] = start;
+                            Log.i("Lineswitch", "Step: "+step.getName()+ " Line under or equal. Line: "+line);
+                        }
+                    }
+                }
+                Log.i("Lineswitch", "Step: "+step.getName()+ " now breaking after checking line: "+line);
+                break;
+            }
+        }
+        return position;
     }
 
 }

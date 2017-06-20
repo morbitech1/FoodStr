@@ -1,5 +1,7 @@
 package com.example.s164403.foodstr;
 
+import com.example.s164403.foodstr.database.Model.Recipe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +13,8 @@ public class RecipeStep {
     private boolean hot;
     private int time = 10;
     private boolean hand;
-    private List<RecipeStep> prerequisites;
-    private List<RecipeStep> predecessors;
+    private List<RecipeStep> prerequisites = new ArrayList<RecipeStep>();
+    private List<RecipeStep> predecessors = new ArrayList<RecipeStep>();
     private String name = "";
     private String description = "";
 
@@ -47,7 +49,9 @@ public class RecipeStep {
     public List<RecipeStep> getPrerequisites() {
         return prerequisites;
     }
-
+    public List<RecipeStep> getPredecessors() {
+        return predecessors;
+    }
     public void addPrerequisite(RecipeStep prerequisite) {
         prerequisites.add(prerequisite);
         prerequisite.addPredecessor(this);
