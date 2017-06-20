@@ -59,6 +59,10 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
             NotificationManager not = (NotificationManager)context.getSystemService(context.NOTIFICATION_SERVICE);
             not.cancel(NOTIFICATION_ID);
 
+            Vibrator vib = (Vibrator) context.getSystemService(context.VIBRATOR_SERVICE);
+            vib.cancel();
+            if (alarmsound != null) alarmsound.stop();
+
         }else{
             String time = "";
             time += (intent.getIntExtra("hour", 0) < 10 ? "0" + intent.getIntExtra("hour", 0) : intent.getIntExtra("hour", 0));
@@ -98,7 +102,7 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
 
         NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_notifications_black_24dp)
-                .setContentTitle("Title")
+                .setContentTitle(recipe)
                 .setContentText("[12:03] Foodstr Alarm")
                 .setTicker("Foodstr Alarm ["+time+"]")
                 .setCustomBigContentView(contentView);
