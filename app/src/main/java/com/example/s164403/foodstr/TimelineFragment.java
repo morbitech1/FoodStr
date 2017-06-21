@@ -42,6 +42,8 @@ import com.example.s164403.foodstr.database.Model.Recipe;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static com.example.s164403.foodstr.R.styleable.AlertDialog;
+
 public class TimelineFragment extends Fragment {
 
     private TextView mTextMessage;

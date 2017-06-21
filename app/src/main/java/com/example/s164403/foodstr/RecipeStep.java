@@ -37,7 +37,8 @@ public class RecipeStep {
         this.prerequisites = new ArrayList<>();
         this.description = description;
         for (RecipeStep step : prerequisites){
-            addPrerequisite(step);
+            if (step != null)
+                addPrerequisite(step);
         }
 
     }
